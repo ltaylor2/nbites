@@ -9,21 +9,23 @@ ADD_DEFINITIONS( -mmmx )
 
 INCLUDE_DIRECTORIES( geom )
 INCLUDE_DIRECTORIES( fieldlines )
+INCLUDE_DIRECTORIES( ../image)
+INCLUDE_DIRECTORIES( Hough )
 INCLUDE_DIRECTORIES( . )
 
 
 ############################ PROJECT SOURCES FILES
 # Add here source files needed to compile this project
 SET( FIELD_LINES_SRCS
-  FieldLines/FieldLinesDetector
-  FieldLines/CornerDetector
-  FieldLines/HoughSpace
-  FieldLines/HoughSpaceImpl
-  FieldLines/EdgeDetector
-  FieldLines/Gradient
-  FieldLines/HoughVisualLine
-  FieldLines/HoughVisualCorner
-  geom/HoughLine
+  Hough/AdjustParams
+  Hough/Edge
+  Hough/FieldLine
+  Hough/Gradient
+  Hough/HoughLineModule
+  Hough/HoughSpace
+  Hough/Line
+  Hough/LineFit
+  Hough/Util
   )
 
 SET( VISION_SRCS Ball
@@ -88,7 +90,9 @@ TARGET_LINK_LIBRARIES(
   vision
   portals
   support
-  messages)
+  messages
+  image
+  )
 
 ############################ GTESTS
 if (OFFLINE)
