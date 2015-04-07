@@ -11,6 +11,7 @@
 
 #include "Images.h"
 #include "image/ImageConverterModule.cpp"
+#include "vision/Hough/HoughLineModule.cpp"
 #include "RoboGrams.h"
 
 std::vector<nbfunc_t> FUNCS;
@@ -157,6 +158,61 @@ int ImageConverter_func() {
     return 0;
 }
 
+int HoughLine_func() {
+    assert(args.size() == 1);
+
+    printf("HoughLine_func()\n");
+
+    logio::log_t arg1 = args[0];
+    std::vector<std::string> kvp = logio::pairs(arg1.desc);
+    int width = 640;
+    int height = 480;
+
+    messages::YUVImage image(arg1.data, width, height, width);
+
+    portals::Message<messages::YUVImage> message(&image);
+    man::vision::HoughLineModule module;
+
+    module.imageIn.setMessage(message);
+    module.run();
+
+    const messages::PackedImage<short unsigned int>* houghImage = module.houghImage.getMessage(true).get();
+
+    logio::log_t houghRet;
+
+    std::string houghName = "type=YUVImage encoding=[Y16] width=";
+    houghName += std::to_string(houghImage->width());
+    houghName += " height=";
+    houghName += std::to_string(houghImage->height());
+
+    houghRet.desc = (char*)malloc(houghName.size() + 1);
+    memcpy(houghRet.desc, houghName.c_str(), houghName.size() + 1);
+
+    houghRet.dlen = houghImage->width() * houghImage->height() * 2;
+    houghRet.data = (uint8_t*)malloc(houghRet.dlen);
+    memcpy(houghRet.data, houghImage->pixelAddress(0, 0), houghRet.dlen);
+
+    rets.push_back(houghRet);
+
+    const messages::Lines* lines = module.houghLineList.getMessage(true).get();
+
+    std::string lineName = "type=proto-VisionField";
+
+    logio::log_t lineRet;
+
+    lineRet.desc = (char*)malloc(lineName.size() + 1);
+    memcpy(lineRet.desc, lineName.c_str(), lineName.size() + 1);
+
+    std::string data;
+    lines->SerializeToString(&data);
+
+    lineRet.data = (uint8_t*)malloc(data.size());
+    lineRet.dlen = data.size();
+    memcpy(lineRet.data, (uint8_t*)data.c_str(), data.size());
+    rets.push_back(lineRet);
+    return 0;
+}
+
 void register_funcs() {
     
     /*test func 1*/
@@ -187,6 +243,11 @@ void register_funcs() {
     ImageConverter.func = ImageConverter_func;
     FUNCS.push_back(ImageConverter);
 
+    nbfunc_t HoughLine;
+    HoughLine.name = "HoughLine";
+    HoughLine.args = {sYUVImage};
+    HoughLine.func = HoughLine_func;
+    FUNCS.push_back(HoughLine);
 }
 
 

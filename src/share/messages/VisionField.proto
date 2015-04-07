@@ -1,5 +1,7 @@
 package messages;
 
+option java_outer_classname = "VisionFieldOuterClass";
+
 message VisionField
 {
     optional int64 timestamp = 1;
@@ -195,3 +197,13 @@ message VisualFieldEdge
     optional float distance_m = 2;
     optional float distance_r = 3;
 }
+
+message Lines {
+    message Line {
+        optional float angle = 1;
+        optional float radius = 2; //TODO is this the write size int?
+    }
+
+    repeated Line line = 1;
+}
+
