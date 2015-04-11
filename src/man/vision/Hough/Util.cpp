@@ -4,10 +4,15 @@
 namespace man {
 namespace vision {
 
+// **************************
+// *                        *
+// *         Util           *
+// *                        *
+// **************************
+// Helper methods
 class Util {
 	
 public:
-	// TODO stop being a 5th grader and remember what radians are
 	static double diffRadians(double a, double b)
 	{
 		double d = a-b;

@@ -5,7 +5,18 @@
 namespace man {
 namespace vision {
 
+// **************************
+// *                        *
+// *          Fool          *
+// *                        *
+// **************************
+// No, I'm no talking about me.
+// This is the FuzzyLogic class that helps
+// find fieldlines using logical thresholds instead
+// of strict booleans.(Operating, for instance, on the range [0...1])
+// Overrided operators used for Fuzzy logic calculations.
 class Fool {
+
 public:
     Fool(double value_) : value(value_) {}
     double get() const { return value; }
@@ -32,6 +43,10 @@ inline Fool Fool::operator!() const
     return Fool(1 - get());
 }
 
+
+// Fuzzy thresholds construct and store the two ends
+// of a fuzzy logic threshold, allowing you to do Fool
+// operations
 class FuzzyThr {
 public:
     FuzzyThr(double t0_, double t1_) : t0(t0_), t1(t1_) {}

@@ -8,28 +8,32 @@
 namespace man {
 namespace vision {
 
+// Constructor, also sets t
 Line::Line(int rIndex_, int tIndex_, double r_, double t_, double score_)
 	: rIndex(rIndex_), tIndex(tIndex_ & 0xFF), r(r_), score(score_), 
 	  fieldLineIndex(-1), end0(-200), end1(200)
 {
 	// TODO --  is this the right way to set T?
+	// maybe this is where things are going horribly, horribly wrong?
 	double n = floor(t_ / (2.0 * M_PI));
 	t = t_ - n * 2.0 * M_PI;
 }
 
+// Cos of binary angle
 double Line::getCosT() {
 	return cos(getBinaryAngle());
 }
 
+// Sin of binary angle
 double Line::getSinT() {
 	return sin(getBinaryAngle());
 }
 
-// TODO stop being so lazy and learn about binary angles
 int Line::getBinaryAngle() {
 	return (int)(t / M_PI * 128.0) & 0xFF;
 }
 
+// Does this line intersect another line? True if they do intersect
 bool Line::intersect(Line otherLine, double &px, double &py) {
 	double g;
 
@@ -38,8 +42,6 @@ bool Line::intersect(Line otherLine, double &px, double &py) {
 	double cs2 = cos(otherLine.getT());
 	double sn2 = sin(otherLine.getT());
 
-	// TODO stop being so lazy and take a second to understand
-	// lines for once in your life liam
 	px = sn2 * r - sn1 * otherLine.getR();
 	py = -cs2 * r + cs1 * otherLine.getR();
 	g = cs1 * sn2 - sn1 * cs2;
@@ -121,7 +123,7 @@ void Line::adjust(std::vector<Edge> &edges, AdjustParams p)
 	}
 
 	// now adjust R and T w/ line fit
-	// TODO stop being lazy and actually figure that unit vect thing out
+	// TODO understand unit vectors better
 	double r = fit.getCenterX() * fit.getSecondPrincipalAxisU() + fit.getCenterY() * fit.getSecondPrincipalAxisV();
 	if (getCosT() * fit.getSecondPrincipalAxisU() + getSinT() * fit.getSecondPrincipalAxisV() >= 0) {
 		// setUnitVect(fit.getSecondPrincipalAxisU(), fit.getSecondPrincipalAxisV());
@@ -134,13 +136,14 @@ void Line::adjust(std::vector<Edge> &edges, AdjustParams p)
 	score = fit.getArea();
 }
 
+// add to the ubin with the appropriate weights
 void Line::uAdd(double u, double w) 
 {
-	// TODO figure out how this works
 	int i = std::min(std::max((int)floor(u + uHistSize / 2.0), 0), uHistSize - 1);
 	uHistogram[i] += w;
 }
 
+// get the uHist bin that corresponds to the correct spot along the line
 double Line::uBin(int index)
 {
 	return index - (uHistSize - 1 / 2.0);

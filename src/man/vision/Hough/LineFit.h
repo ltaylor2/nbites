@@ -3,8 +3,15 @@
 namespace man {
 namespace vision {
 
-// linear regression
+// **************************
+// *                        *
+// *        LineFit         *
+// *                        *
+// **************************
+// simple linear regression
+// TODO work through the math behind this
 class LineFit {
+
 public:
 	LineFit();
 	double getCenterX() { return sumX / sumW; }

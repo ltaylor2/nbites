@@ -5,12 +5,26 @@
 namespace man {
 namespace vision {
 
-// a pair of lines that appear to be 
-// TODO implement heights, tilts, etc. for camera params
+// **************************
+// *                        *
+// *       FieldLine        *
+// *                        *
+// **************************
+// Fieldlines stores pairs of lines found from Hough line-finder
+// and then determined to be matching pairs on the field.
+// In HoughSpace, fieldlines are the final step, going:
+// Image-->Gradient-->Edges-->Lines-->Fieldlines, with
+// findFieldLines() in the HoughSpace
+
+// TODO implement title, camera angle, etc.
 class FieldLine {
+	
 public:
 	FieldLine(Line line1_, Line line2_);
 	double getSeparation();
+
+	// Getters for each of the lines, which store their
+	// Line info separately
 	Line getLine1() { return line1; }
 	Line getLine2() { return line2; }
 

@@ -6,6 +6,7 @@
 namespace man {
 namespace vision {
 
+// Constructor
 HoughSpace::HoughSpace()
 	: lines(), fieldLines()
 {}
@@ -15,38 +16,45 @@ void HoughSpace::run(std::vector<Edge>& edges, AdjustParams p)
 {
 	clear();
 
+	// run through arg edges and process them, incrementing
+	// the hough accumulator
 	for (unsigned int i = 0; i < edges.size(); i++) {
 		int t = edges[i].getDir8();
 		processEdge(edges[i].getX(), edges[i].getY(), t - ANGLE_SPREAD, t + ANGLE_SPREAD);
 	}
 
+	// smooth the hs peaks
 	smooth();
 
+	// look at the peaks and make appropriate lines
 	getPeaks();
 
 	std::cout << "Processed Lines: " << lines.size() << std::endl;
 
+	// Passed this point, we suppress lines and adjust them to
+	// better find field lines. For current debugging, just 
+	// ending with getPeaks(), which finds the lines.
 	// TODO DEFINITELY change the edges to something that will
 	// store dynamic dimensions
 	// suppress(edges.getCenterX(), edges.getCenterY());
 
-	suppress(320, 240);
+	// suppress(320, 240);
 
-	std::cout << "Post-Suppression Lines: " << lines.size() << std::endl;
+	// std::cout << "Post-Suppression Lines: " << lines.size() << std::endl;
 
 	// TODO, array of params to change refinement
-	for (int i = 0; i < REFINE_STEPS; i++) {
-		adjust(edges, p);
-	}
+	// for (int i = 0; i < REFINE_STEPS; i++) {
+	//	adjust(edges, p);
+	// }
 
-	std::cout << "Post-Adjusted Lines: " << lines.size() << std::endl;
+	// std::cout << "Post-Adjusted Lines: " << lines.size() << std::endl;
 
-	findFieldLines();
+	//findFieldLines();
 }
 
 // R coord in Hough space for a boundary point with direction t
 // SLOW
-double HoughSpace::getR(int x, int y, int t) {
+int HoughSpace::getR(int x, int y, int t) {
 	double a = (t & 0xFF) * M_PI / 128.0;
 	return (int)floor(x * cos(a) + y * sin(a));
 }
@@ -62,9 +70,8 @@ void HoughSpace::processEdge(int x, int y, int t0, int t1)
 		for (int r = std::min(r0, r1); r <= std::max(r0, r1); r++) {
 			int ri = r + R_SPAN /2;
 			if (0 <= ri && ri < R_SPAN)
-				++hs[ri][t8];
+				hs[ri][t8]++;
 		}
-
 		r0 = r1;
 	}
 }
@@ -80,7 +87,7 @@ void HoughSpace::smooth()
 	// 2x2 boxcar smoothing
 	for (int t = 0; t < T_SPAN; t++) {
 		for (int r = 0; r < R_SPAN - 1; r++) {
-			hs[r][t] = hs[r][t] + hs[r + 1][t] + hs[r][t + 1] + hs[r + 1][t+1];
+			hs[r][t] = hs[r][t] + hs[r + 1][t] + hs[r][t + 1] + hs[r + 1][t + 1];
 		}
 	}
 }
@@ -90,36 +97,34 @@ void HoughSpace::smooth()
 // false peaks are suppressed in suppress()
 void HoughSpace::getPeaks()
 {
-	int numNeighbors = 10;
+	
 	// neighbors
-	// TODO why 10?
-	int dRNeighbors[] = { 1, 1, 0, -1, -2, -2, -2, -1, 0, 1};
-	int dTNeighbors[] = { 0, 1, 1, 1, 1, 0, -1, -2, -2 , -2};
+	int numNeighbors = 4;
+	int dRNeighbors[] = { 1, 1, 0, -1 };
+	int dTNeighbors[] = { 0, 1, 1, 1 };
 
-	int peakPoints = numNeighbors;
 	int threshold = 4 * ACCEPT_THRESHOLD; // smoothing w/ gain 4 (?)
 
 	for (int t = 0; t < T_SPAN; t++) {
-		for (int r =2; r < R_SPAN - 2; r++)
+		for (int r = 2; r < R_SPAN - 2; r++)
 		{
 			// if there's a peak, get its score, make sure it passes the threshold,
 			// and make sure it's better than all of its neighbors
 			bool isPeak = true;
 			int z = hs[r][t];
 			if (z >= threshold) {
-				for (int i = 0; i < peakPoints; i++) {
-					if (!(z > hs[r + dRNeighbors[i]][(t + dTNeighbors[i]) & 0xFF] 
-						  && z >= hs[r - dRNeighbors[i]][(t - dTNeighbors[i]) & 0xFF]))
+				for (int i = 0; i < numNeighbors; i++) {
+					if (!(z > hs[r + dRNeighbors[i]][(t + dTNeighbors[i]) & 0xFF]
+					 	&& z >= hs[r - dRNeighbors[i]][(t - dTNeighbors[i]) & 0xFF]))
 						isPeak = false;
 				}
 				if (isPeak) {
 					peaks[r][t] = true;
 					lines.push_back(Line(r, t,
-									   r - R_SPAN / 2 + 0.5,
-									   (t + 0.5) * M_PI / 128.0, 
-									   z >> 2));
+									   	 r - R_SPAN / 2 + 0.5,
+									     (t + 0.5) * M_PI / 128.0, 
+									     z >> 2));
 				}
-
 			}
 		}
 	}
@@ -175,6 +180,7 @@ void HoughSpace::suppress(int rx, int ry)
 	}
 }
 
+// adjust lines by erasing them if appropriate
 void HoughSpace::adjust(std::vector<Edge>& edges, AdjustParams p)
 {
 	unsigned int i = 0;
@@ -207,7 +213,6 @@ void HoughSpace::findFieldLines()
 			// 0x80 offset) within a +0x10 range.
 			if (lines[j].getBinaryAngle() >= (lines[i].getBinaryAngle() + 0x80)
 				&& lines[j].getBinaryAngle() <= (lines[i].getBinaryAngle() + 0x90)) {
-				
 				Line line2 = lines[j];
 
 				// check gradient, where cos(0x10) is about 0.92)
@@ -245,6 +250,7 @@ void HoughSpace::findFieldLines()
 	}
 }
 
+// clean up the accumulator and lines list from earlier use
 void HoughSpace::clear() {
 	for (int t = 0; t < T_SPAN; t++) {
 		for (int r = 0; r < R_SPAN; r++) {

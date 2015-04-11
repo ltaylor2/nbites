@@ -1,11 +1,12 @@
 #include "Gradient.h"
 #include <iostream>
 #include <math.h>
+#include <fstream>
 
 namespace man {
 namespace vision {
 
-// gradient from size
+// COnstruct an empty gradient by specifying only sizes
 Gradient::Gradient(int wd, int ht)
 	: width(wd), height(ht)
 {
@@ -14,7 +15,9 @@ Gradient::Gradient(int wd, int ht)
 	mag = new int[width * height];
 }
 
-// gradient from yImage taken from ImageAquisition
+// gradient from a pointer to 16-bit integers that store
+// pixel information. This is how we get the Gradient from
+// the y-image output in ImageAquisition (src/image)
 Gradient::Gradient(uint16_t *pixels, int wd, int ht)
 	: width(wd), height(ht)
 {
@@ -22,10 +25,10 @@ Gradient::Gradient(uint16_t *pixels, int wd, int ht)
 	gy = new int[width * height];
 	mag = new int[width * height];
 
-	//width * y + x
+	//[x][y] in 1d is [x + width*y]
 	for (int y = 1; y < height - 1; y++) {
 		for (int x = 1; x < width - 1; x++) {
-
+		  // get the values from the y-image
           int u = (pixels[(x+1) + width * (y-1)] + 2 * pixels[(x+1) + width * y] + pixels[(x+1) + width * (y+1)]) -
           		  (pixels[(x-1) + width * (y-1)] + 2 * pixels[(x-1) + width * y] + pixels[(x-1) + width * (y+1)]);
 
@@ -68,11 +71,17 @@ std::vector<Edge> Gradient::getEdges(int noiseThr)
 {
 	// tables that show the directions of pixel neighbors
 	// TODO make sure things work w/ green images
-	// TODO understand this edge detection process
 	int dXNeighbors[] = { 1, 1, 0, -1, -1, -1, 0, 1};
 	int dYNeighbors[] = { 0, -1, -1, -1, 0 , 1, 1, 1};
 
 	std::vector<Edge> edges;
+
+	// keep track of where an edge is pushed from ((x,y)), to visualize
+	// in an output .txt file
+	int edgeTrue[width * height];
+	for (int i = 0; i < width * height; i++) {
+		edgeTrue[i] = 0;
+	}
 
 	noiseThr = noiseThr * noiseThr << 4; // adjusted for mag^2 like stored in gradient
 	for (int y = 2; y < height - 2; y++) {
@@ -83,16 +92,36 @@ std::vector<Edge> Gradient::getEdges(int noiseThr)
 				int a = ((e.getDir8() + 0x10) & 0xFF) >> 5;
 
 				// asymmetric peak test
-				if (z > mag[(x + dXNeighbors[a]) + (width * (y + dYNeighbors[a]))]
-					&& z >= mag[(x - dXNeighbors[a]) + (width * (y - dYNeighbors[a]))])
+				if (z > mag[(x + dXNeighbors[a]) + width * (y + dYNeighbors[a])]
+					&& z >= mag[(x - dXNeighbors[a]) + width * (y - dYNeighbors[a])]) {
+					
+					// found an edge!
 					edges.push_back(e);
+					edgeTrue[x + width * y] = 1;
+				}
 			}
 		}
 	}
 
+	// used to output a .txt file to visualize the gradient
+	// w/o having to protobuff anything
+	std::ofstream file;
+	file.open("gradient.txt");
+
+	for (int y = 2; y < height - 2; y++) {
+		for (int x = 2; x < width - 2; x++) {
+			file << edgeTrue[x + width * y];
+		}
+		file << std::endl;
+	}
+
+	file.close();
+
 	return edges;
 }
 
+// Clean up the gradient
+// TODO learn about destructors and make sure this is correct
 Gradient::~Gradient() {
 	delete[] gx;
 	delete[] gy;

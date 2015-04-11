@@ -9,10 +9,18 @@
 namespace man {
 namespace vision {
 
+// **************************
+// *                        *
+// *        Gradient        *
+// *                        *
+// **************************
 // gradient image that holds gradients and squared magnitude,
 // following the logic from Bill's C# code, (x,y) comps are computed
-// on the fly
+// on the fly. Gradients constructed from an image, or from a list
+// of edges, and store an array of directional information (gx, gy) as
+// well as the magnitude of that gradient direction at each index
 class Gradient {
+	
 public:
 	// TODO gradient constructor from image
 	Gradient(int wd, int ht);
@@ -27,9 +35,6 @@ public:
 	int getMag(int x, int y);
 
 	std::vector<Edge> getEdges(int noiseThr);
-
-	// public for now to find the center of all the edges,
-	// definitely fix this
 
 private:
 	int *gx;
