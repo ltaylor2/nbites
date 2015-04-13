@@ -210,6 +210,41 @@ int HoughLine_func() {
     lineRet.dlen = data.size();
     memcpy(lineRet.data, (uint8_t*)data.c_str(), data.size());
     rets.push_back(lineRet);
+
+    const messages::PackedImage<short unsigned int>* magImage = module.magImage.getMessage(true).get();
+    
+    logio::log_t magRet;
+    std::string magName = "type=YUVImage encoding=[Y16] width=";
+    magName += std::to_string(magImage->width());
+    magName += " height=";
+    magName += std::to_string(magImage->height());
+
+    magRet.desc = (char*)malloc(magName.size() + 1);
+    memcpy(magRet.desc, magName.c_str(), magName.size() + 1);
+
+    magRet.dlen = magImage->width() * magImage->height() * 2;
+    magRet.data = (uint8_t*)malloc(magRet.dlen);
+    memcpy(magRet.data, magImage->pixelAddress(0,0), magRet.dlen);
+
+    rets.push_back(magRet);
+
+    const messages::PackedImage<short unsigned int>* edgeImage = module.edgeImage.getMessage(true).get();
+
+    logio::log_t edgeRet;
+    std::string edgeName = "type=YUVImage encoding=[Y16] width=";
+    edgeName += std::to_string(edgeImage->width());
+    edgeName += " height=";
+    edgeName += std::to_string(edgeImage->height());
+
+    edgeRet.desc = (char*)malloc(edgeName.size() + 1);
+    memcpy(edgeRet.desc, edgeName.c_str(), edgeName.size() + 1);
+
+    edgeRet.dlen = edgeImage->width() * edgeImage->height() * 2;
+    edgeRet.data = (uint8_t*)malloc(edgeRet.dlen);
+    memcpy(edgeRet.data, edgeImage->pixelAddress(0,0), edgeRet.dlen);
+
+    rets.push_back(edgeRet);
+
     return 0;
 }
 

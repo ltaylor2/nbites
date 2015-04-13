@@ -12,6 +12,7 @@ namespace vision {
 
 using namespace messages;
 using namespace portals;
+
 // **************************
 // *                        *
 // *     HoughLineModule    *
@@ -37,6 +38,13 @@ public:
 	// sends out the line information to draw the lines back in
 	// nbtool view
 	portals::OutPortal<messages::Lines> houghLineList;
+
+	// sends out the magnitude-ratio image
+	portals::OutPortal<messages::PackedImage16> magImage;
+
+	// sends out the edge-marked image
+	portals::OutPortal<messages::PackedImage16> edgeImage;
+
 
 	void run_();
 

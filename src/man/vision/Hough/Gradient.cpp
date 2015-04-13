@@ -1,4 +1,5 @@
 #include "Gradient.h"
+
 #include <iostream>
 #include <math.h>
 #include <fstream>
@@ -6,7 +7,7 @@
 namespace man {
 namespace vision {
 
-// COnstruct an empty gradient by specifying only sizes
+// Construct an empty gradient by specifying only sizes
 Gradient::Gradient(int wd, int ht)
 	: width(wd), height(ht)
 {
@@ -70,7 +71,6 @@ int Gradient::getMag(int x, int y)
 std::vector<Edge> Gradient::getEdges(int noiseThr)
 {
 	// tables that show the directions of pixel neighbors
-	// TODO make sure things work w/ green images
 	int dXNeighbors[] = { 1, 1, 0, -1, -1, -1, 0, 1};
 	int dYNeighbors[] = { 0, -1, -1, -1, 0 , 1, 1, 1};
 
@@ -78,9 +78,9 @@ std::vector<Edge> Gradient::getEdges(int noiseThr)
 
 	// keep track of where an edge is pushed from ((x,y)), to visualize
 	// in an output .txt file
-	int edgeTrue[width * height];
+	edgeTrue = new bool[width * height];
 	for (int i = 0; i < width * height; i++) {
-		edgeTrue[i] = 0;
+		edgeTrue[i] = false;
 	}
 
 	noiseThr = noiseThr * noiseThr << 4; // adjusted for mag^2 like stored in gradient
@@ -97,7 +97,7 @@ std::vector<Edge> Gradient::getEdges(int noiseThr)
 					
 					// found an edge!
 					edges.push_back(e);
-					edgeTrue[x + width * y] = 1;
+					edgeTrue[x + width * y] = true;
 				}
 			}
 		}
@@ -106,11 +106,15 @@ std::vector<Edge> Gradient::getEdges(int noiseThr)
 	// used to output a .txt file to visualize the gradient
 	// w/o having to protobuff anything
 	std::ofstream file;
-	file.open("gradient.txt");
+	file.open("gradients.txt");
 
 	for (int y = 2; y < height - 2; y++) {
 		for (int x = 2; x < width - 2; x++) {
-			file << edgeTrue[x + width * y];
+			if (edgeTrue[x + width * y]) {
+				file << 1;
+			}
+			else
+				file << 0;
 		}
 		file << std::endl;
 	}
@@ -120,12 +124,14 @@ std::vector<Edge> Gradient::getEdges(int noiseThr)
 	return edges;
 }
 
+
 // Clean up the gradient
 // TODO learn about destructors and make sure this is correct
 Gradient::~Gradient() {
 	delete[] gx;
 	delete[] gy;
 	delete[] mag;
+	delete[] edgeTrue;
 }
 
 }

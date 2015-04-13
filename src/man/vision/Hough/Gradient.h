@@ -14,9 +14,9 @@ namespace vision {
 // *        Gradient        *
 // *                        *
 // **************************
-// gradient image that holds gradients and squared magnitude,
-// following the logic from Bill's C# code, (x,y) comps are computed
-// on the fly. Gradients constructed from an image, or from a list
+// Vector for each point in an image for direction and magnitude of
+// changes in brightness at a point. 
+// Gradients constructed from an image, or from a list
 // of edges, and store an array of directional information (gx, gy) as
 // well as the magnitude of that gradient direction at each index
 class Gradient {
@@ -33,6 +33,8 @@ public:
 	int getHeight() { return height; }
 
 	int getMag(int x, int y);
+	bool* getEdgeMarkers() { return edgeTrue; }
+	int* getMagnitudes() { return mag; }
 
 	std::vector<Edge> getEdges(int noiseThr);
 
@@ -40,6 +42,7 @@ private:
 	int *gx;
 	int *gy;
 	int *mag;
+	bool *edgeTrue;
 	int width, height;
 };
 

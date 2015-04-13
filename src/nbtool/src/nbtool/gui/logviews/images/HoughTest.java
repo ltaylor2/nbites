@@ -20,11 +20,18 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 public class HoughTest extends ViewParent implements CppFuncListener{
 	private VisionFieldOuterClass.Lines houghLines;
-    private BufferedImage img;
+    private BufferedImage yImg;
+    private BufferedImage magImg;
+    private BufferedImage edgeImg;
 
 	public void paintComponent(Graphics g) {
-        if(img != null)
-		    g.drawImage(img, 0, 0, null);
+        if(yImg != null)
+		    g.drawImage(yImg, 0, 0, null);
+		if(magImg != null)
+			g.drawImage(magImg, 0, 400, null);
+		if(edgeImg != null)
+			g.drawImage(edgeImg,400, 400, null);
+
         List<VisionFieldOuterClass.Line> lines = houghLines.getLinesList();
         float r;
         float t;
@@ -38,7 +45,7 @@ public class HoughTest extends ViewParent implements CppFuncListener{
             t = lines.get(i).getAngle();
             x1 = r * Math.cos(t) + 160;
             y1 = r * Math.sin(t) + 120;
-            System.out.println("x coordinate: " + x1 + " y coordinate: " + y1);
+            System.out.println("r: " + r + " t: " + t);
             g.drawLine((int) x1, (int) y1, (int) (x1 + 20), (int) (y1 + 20 * Math.tan(t + Math.PI/2))); 
        } 
     }
@@ -66,7 +73,10 @@ public class HoughTest extends ViewParent implements CppFuncListener{
 
 	@Override
 	public void returned(int ret, Log... out) { 
-		this.img = U.biFromLog(out[0]);
+		this.yImg = U.biFromLog(out[0]);
+		this.magImg = U.biFromLog(out[2]);
+		this.edgeImg = U.biFromLog(out[3]);
+
         System.out.print("image loaded");
         try {
 		    this.houghLines = VisionFieldOuterClass.Lines.parseFrom(out[1].bytes);
