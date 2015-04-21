@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <math.h>
-#include <fstream>
 
 namespace man {
 namespace vision {
@@ -71,8 +70,8 @@ int Gradient::getMag(int x, int y)
 std::vector<Edge> Gradient::getEdges(int noiseThr)
 {
 	// tables that show the directions of pixel neighbors
-	int dXNeighbors[] = { 1, 1, 0, -1, -1, -1, 0, 1};
-	int dYNeighbors[] = { 0, -1, -1, -1, 0 , 1, 1, 1};
+	int dXNeighbors[] = { 1,  1,  0, -1, -1, -1, 0, 1};
+	int dYNeighbors[] = { 0, -1, -1, -1,  0 , 1, 1, 1};
 
 	std::vector<Edge> edges;
 
@@ -102,24 +101,6 @@ std::vector<Edge> Gradient::getEdges(int noiseThr)
 			}
 		}
 	}
-
-	// used to output a .txt file to visualize the gradient
-	// w/o having to protobuff anything
-	std::ofstream file;
-	file.open("gradients.txt");
-
-	for (int y = 2; y < height - 2; y++) {
-		for (int x = 2; x < width - 2; x++) {
-			if (edgeTrue[x + width * y]) {
-				file << 1;
-			}
-			else
-				file << 0;
-		}
-		file << std::endl;
-	}
-
-	file.close();
 
 	return edges;
 }

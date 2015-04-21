@@ -1,6 +1,7 @@
 #include "HoughSpace.h"
 #include "Util.cpp"
 #include "AdjustParams.h"
+
 #include <iostream>
 
 namespace man {
@@ -38,18 +39,18 @@ void HoughSpace::run(std::vector<Edge>& edges, AdjustParams p)
 	// store dynamic dimensions
 	// suppress(edges.getCenterX(), edges.getCenterY());
 
-	// suppress(320, 240);
+	suppress(320, 240);
 
-	// std::cout << "Post-Suppression Lines: " << lines.size() << std::endl;
+	std::cout << "Post-Suppression Lines: " << lines.size() << std::endl;
 
 	// TODO, array of params to change refinement
-	// for (int i = 0; i < REFINE_STEPS; i++) {
-	//	adjust(edges, p);
-	// }
+	for (int i = 0; i < REFINE_STEPS; i++) {
+		adjust(edges, p);
+	}
 
-	// std::cout << "Post-Adjusted Lines: " << lines.size() << std::endl;
+	std::cout << "Post-Adjusted Lines: " << lines.size() << std::endl;
 
-	//findFieldLines();
+	findFieldLines();
 }
 
 // R coord in Hough space for a boundary point with direction t
@@ -100,8 +101,8 @@ void HoughSpace::getPeaks()
 	
 	// neighbors
 	int numNeighbors = 4;
-	int dRNeighbors[] = { 1, 1, 0, -1 };
-	int dTNeighbors[] = { 0, 1, 1, 1 };
+	int dRNeighbors[] = { 1, 1, 0, -1};
+	int dTNeighbors[] = { 0, 1, 1, 1};
 
 	int threshold = 4 * ACCEPT_THRESHOLD; // smoothing w/ gain 4 (?)
 
@@ -172,22 +173,23 @@ void HoughSpace::suppress(int rx, int ry)
 	// then actually delete the marked lines by iterating through all the lines
 	int n = 0;
 	for (unsigned int i = 0; i < lines.size(); i++) {
-		if (markForDelete[i]) {
+		if (markForDelete[i])
 			lines.erase(lines.begin() + n);
-		}
 		else
 			n++;
 	}
 }
 
-// adjust lines by erasing them if appropriate
+// adjust lines and erase them if they are low score erasing them if they are too low score
 void HoughSpace::adjust(std::vector<Edge>& edges, AdjustParams p)
 {
 	unsigned int i = 0;
 	while (i < lines.size()) {
 		lines[i].adjust(edges, p);
-		if (lines[i].getScore() < ACCEPT_THRESHOLD)
+
+		if (lines[i].getScore() < 100) {
 			lines.erase(lines.begin() + i);
+		}
 		else
 			i++;
 	}

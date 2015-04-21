@@ -1,6 +1,9 @@
 #include "HoughLineModule.h"
 #include "Gradient.h"
+
 #include <iostream>
+#include <fstream>
+#include <dirent.h>
 
 namespace man {
 namespace vision {
@@ -13,7 +16,6 @@ HoughLineModule::HoughLineModule()
 	: Module(),
 	  houghImage(base()),
 	  houghLineList(base()),
-	  magImage(base()),
 	  edgeImage(base()),
 	  hs()
 {}
@@ -46,35 +48,36 @@ void HoughLineModule::run_() {
 	std::cout << "Gradient Built" << std::endl;
 
 	// get the edges with (here) a hardcoded noise threshold
-	int noiseThr = 20;
+	int noiseThr = 17;
 	std::vector<Edge> edges = gradient.getEdges(noiseThr);
 
+	// get the magnitudes for the magnitude image
+	// int *magnitudes = gradient.getMagnitudes();
+
+	// // set the mag image, where brighter pixels have greater magnitude
+	// HeapPixelBuffer *tempBuffer = new HeapPixelBuffer(320*240*2);
+	// PackedImage16 magOutput(tempBuffer, 320, 240, 320);
+
+	// // first find the highest magnitude, to normalize
+	// int maxMag = 0;
+	// for (int y = 0; y < magOutput.height() - 1; y++) {
+	// 	for (int x = 0; x < magOutput.width() - 1; x++) {
+	// 		if (magnitudes[x + magOutput.width() * y] > maxMag)
+	// 			maxMag = magnitudes[x + magOutput.width() * y];
+	// 	}
+	// }
+
+	// // now set the pixels in the mag image normalized for the maximum
+	// // modded for color error?
+	// for (int y = 0; y < magOutput.height(); y++) {
+	// 	for (int x = 0; x < magOutput.width(); x++) {
+	// 		*magOutput.pixelAddress(x,y) = (int)((double)magnitudes[x + magOutput.width() * y] / maxMag * 255) % 255;
+	// 	}
+	// }
+	
 	// get the edges for the edge image
 	bool *edgeMarkers = gradient.getEdgeMarkers();
 
-	// get the magnitudes for the magnitude image
-	int *magnitudes = gradient.getMagnitudes();
-
-	// set the mag image, where brighter pixels have greater magnitude
-	HeapPixelBuffer *tempBuffer = new HeapPixelBuffer(320*240*2);
-	PackedImage16 magOutput(tempBuffer, 320, 240, 320);
-
-	// first find the highest magnitude, to normalize
-	double maxMag = 0;
-	for (int y = 0; y < magOutput.height(); y++) {
-		for (int x = 0; x < magOutput.width(); x++) {
-			if ((double)magnitudes[x + magOutput.width() * y] > maxMag)
-				maxMag = magnitudes[x + magOutput.width() * y];
-		}
-	}
-
-	// now set the pixels in the mag image normalized for the maximum
-	for (int y = 0; y < magOutput.height(); y++) {
-		for (int x = 0; x < magOutput.width(); x++) {
-			*magOutput.pixelAddress(x,y) = (double)magnitudes[x + magOutput.width() * y] / maxMag * 255;
-		}
-	}
-	
 	// edge at point ? white : black
 	HeapPixelBuffer *newTempBuffer = new HeapPixelBuffer(320*240*2);
     PackedImage16 edgeOutput(newTempBuffer, 320, 240, 320);
@@ -94,7 +97,7 @@ void HoughLineModule::run_() {
 	// run the houghspace with the edges from the gradient,
 	// getting lines
 	hs.run(edges, params);
-
+	
 	std::cout << "Ran HoughSpace" << std::endl;
 
 	// for current testing, just working on getting the lines
@@ -105,26 +108,27 @@ void HoughLineModule::run_() {
 	messages::Lines* lines = new messages::Lines;
 
 	// fill the out message with lines
-	for (int i = 0; i < rawLines.size(); i++) {
+	for (int i = 0; i < fieldLines.size(); i++) {
 		messages::Lines_Line* aLine;
 
-		aLine = lines->add_line();
-		aLine->set_radius(rawLines[i].getR());
-		aLine->set_angle(rawLines[i].getT());
-
-		// or, when you become smarter, with fieldlines
 		// aLine = lines->add_line();
-		// aLine->set_radius(fieldLines[i].getLine1().getR());
-		// aLine->set_angle(fieldLines[i].getLine1().getT());
+		// aLine->set_radius(rawLines[i].getR());
+		// aLine->set_angle(rawLines[i].getT());
+		// aLine->set_U0(rawLines[i].getEnd0());
+		// aLine->set_U1(rawLines[i].getEnd1());
 
-		// std::cout << "R:" << fieldLines[i].getLine1().getR() << " T: " << fieldLines[i].getLine1().getT() << std::endl;
+		aLine = lines->add_line();
+		aLine->set_radius(fieldLines[i].getLine1().getR());
+		aLine->set_angle(fieldLines[i].getLine1().getT());
 
-		// messages::Lines_Line* bLine;
-		// bLine = lines->add_line();
-		// bLine->set_radius(fieldLines[i].getLine2().getR());
-		// bLine->set_angle(fieldLines[i].getLine2().getT());
+		std::cout << "Pair " << i << " Line 1 with R:" << fieldLines[i].getLine1().getR() << " T: " << fieldLines[i].getLine1().getT() << std::endl;
 
-		// std::cout << "R:" << fieldLines[i].getLine2().getR() << " T: " << fieldLines[i].getLine2().getT() << std::endl;
+		messages::Lines_Line* bLine;
+		bLine = lines->add_line();
+		bLine->set_radius(fieldLines[i].getLine2().getR());
+		bLine->set_angle(fieldLines[i].getLine2().getT());
+
+		std::cout << "Pair " << i << " Line 2 with R:" << fieldLines[i].getLine2().getR() << " T: " << fieldLines[i].getLine2().getT() << std::endl;
 	}
 
 	// avoid errors from empty lines
@@ -141,7 +145,6 @@ void HoughLineModule::run_() {
 	// set the out messages and end
 	houghImage.setMessage(Message<PackedImage16>(yImage));
 	houghLineList.setMessage(Message<messages::Lines>(lines));
-	magImage.setMessage(Message<PackedImage16>(&magOutput));
 	edgeImage.setMessage(Message<PackedImage16>(&edgeOutput));
 }
 

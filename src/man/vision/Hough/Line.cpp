@@ -4,6 +4,7 @@
 #include "Util.cpp"
 
 #include <math.h>
+#include <iostream>
 
 namespace man {
 namespace vision {
@@ -13,20 +14,18 @@ Line::Line(int rIndex_, int tIndex_, double r_, double t_, double score_)
 	: rIndex(rIndex_), tIndex(tIndex_ & 0xFF), r(r_), score(score_), 
 	  fieldLineIndex(-1), end0(-200), end1(200)
 {
-	// TODO --  is this the right way to set T?
-	// maybe this is where things are going horribly, horribly wrong?
 	double n = floor(t_ / (2.0 * M_PI));
 	t = t_ - n * 2.0 * M_PI;
 }
 
 // Cos of binary angle
 double Line::getCosT() {
-	return cos(getBinaryAngle());
+	return cos(t);
 }
 
 // Sin of binary angle
 double Line::getSinT() {
-	return sin(getBinaryAngle());
+	return sin(t);
 }
 
 int Line::getBinaryAngle() {
@@ -70,23 +69,20 @@ void Line::adjust(std::vector<Edge> &edges, AdjustParams p)
 	int lineAngle = getBinaryAngle();
 
 	// angle range from fuzzy threshold
-	int angleLimit = (int) ceil(p.getAngleThreshold().getT1() * 128 / M_PI);
-
+	int angleLimit = (int)ceil(p.getAngleThreshold().getT1() * 128 / M_PI);
 	// consider every edge (double yikes, need edge bins)
 	for (unsigned int i = 0; i < edges.size(); i++) {
 		Edge e = edges[i];
 
-		if (e.getDir() >= lineAngle - angleLimit
-			&& e.getDir() <= lineAngle + angleLimit) {
+		if (e.getDir8() >= lineAngle - angleLimit
+			&& e.getDir8() <= lineAngle + angleLimit) {
 
 			double angle = Util::diffRadians(e.getDir(), t);
-
 			double x = e.getX();
 			double y = e.getY();
 
-			// TODO stop being so lazy and finally figure out what this means
 			double distance = abs(x * getCosT() + y * getSinT() - r);
-
+			
 			// Fuzzy threshold operators
 			double w = ((angle < p.getAngleThreshold())
 						& (distance < p.getDistanceThreshold())
@@ -116,6 +112,7 @@ void Line::adjust(std::vector<Edge> &edges, AdjustParams p)
 	tw = 0;
 	for (int i = uHistSize - 1; i >= 0; i--) {
 		tw += uHistogram[i];
+		std::cout << tw << std::endl;
 		if (tw >= p.getLineEndWeight()) {
 			end1 = uBin(i);
 			break;
@@ -146,7 +143,8 @@ void Line::uAdd(double u, double w)
 // get the uHist bin that corresponds to the correct spot along the line
 double Line::uBin(int index)
 {
-	return index - (uHistSize - 1 / 2.0);
+	std::cout << "Returning: " << index - (uHistSize - 1) / 2.0 << std::endl;
+	return index - (uHistSize - 1) / 2.0;
 }
 
 }

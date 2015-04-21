@@ -26,11 +26,6 @@ public:
 
 private:
 	double lineEndWeight;
-	
-	// ends of the fuzzy thresholds
-	double angleMin, angleMax;
-	double distMin, distMax;
-	double magMin, magMax;
 
 	// fuzzies themselves
 	FuzzyThr angleThr, distThr, magThr;

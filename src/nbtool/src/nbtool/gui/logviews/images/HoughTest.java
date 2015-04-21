@@ -21,33 +21,37 @@ import com.google.protobuf.InvalidProtocolBufferException;
 public class HoughTest extends ViewParent implements CppFuncListener{
 	private VisionFieldOuterClass.Lines houghLines;
     private BufferedImage yImg;
-    private BufferedImage magImg;
     private BufferedImage edgeImg;
 
 	public void paintComponent(Graphics g) {
-        if(yImg != null)
+        if(yImg != null) {
 		    g.drawImage(yImg, 0, 0, null);
-		if(magImg != null)
-			g.drawImage(magImg, 0, 400, null);
-		if(edgeImg != null)
-			g.drawImage(edgeImg,400, 400, null);
+        }
+		if(edgeImg != null) {
+			g.drawImage(edgeImg, 0, 400, null);
+		}
 
         List<VisionFieldOuterClass.Line> lines = houghLines.getLinesList();
         float r;
         float t;
-        double x1;
-        double y1;
+        double x0, y0;
+        int x1, y1, x2, y2;
         g.setColor(java.awt.Color.red);
 
         System.out.println("");
         for(int i = 0; i < lines.size(); i++) {
             r = lines.get(i).getRadius();
             t = lines.get(i).getAngle();
-            x1 = r * Math.cos(t) + 160;
-            y1 = r * Math.sin(t) + 120;
+            // TODO line protobuff with images
+            x0 = r * Math.cos(t) + yImg.getWidth() / 2;
+            y0 = -r * Math.sin(t) + yImg.getHeight() / 2;
+            x1 = (int)Math.round(x0 - 50 * Math.sin(t));
+            y1 = (int)Math.round(y0 - 50 * Math.cos(t));
+            x2 = (int)Math.round(x0 + 50 * Math.sin(t));
+            y2 = (int)Math.round(y0 + 50 * Math.cos(t));
             System.out.println("r: " + r + " t: " + t);
-            g.drawLine((int) x1, (int) y1, (int) (x1 + 20), (int) (y1 + 20 * Math.tan(t + Math.PI/2))); 
-       } 
+            g.drawLine(x1, y1, x2, y2);
+      } 
     }
 	
 	@Override
@@ -74,8 +78,7 @@ public class HoughTest extends ViewParent implements CppFuncListener{
 	@Override
 	public void returned(int ret, Log... out) { 
 		this.yImg = U.biFromLog(out[0]);
-		this.magImg = U.biFromLog(out[2]);
-		this.edgeImg = U.biFromLog(out[3]);
+		this.edgeImg = U.biFromLog(out[2]);
 
         System.out.print("image loaded");
         try {

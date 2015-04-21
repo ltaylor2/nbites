@@ -201,7 +201,9 @@ message VisualFieldEdge
 message Lines {
     message Line {
         optional float angle = 1;
-        optional float radius = 2; //TODO is this the write size int?
+        optional float radius = 2;
+	optional float end0 = 3;
+	optional float end1 = 4;
     }
 
     repeated Line line = 1;

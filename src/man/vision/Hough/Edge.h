@@ -25,7 +25,7 @@ public:
 	int getMagSquared() { return magSquared; }
 	int getMag() { return mag; }
 
-	int getDir() { return dir; }
+	double getDir() { return dir; }
 	int getDir8();
 
 private:

@@ -1,5 +1,6 @@
 #include <math.h>
 #include <cmath>
+#include <iostream>
 
 namespace man {
 namespace vision {
@@ -16,7 +17,7 @@ public:
 	static double diffRadians(double a, double b)
 	{
 		double d = a-b;
-		double n = (int) floor(d / (2 * M_PI) + 0.5);
+		double n = (int)floor(d / (2 * M_PI) + 0.5);
 		return std::abs(d - n * 2 * M_PI);
 	}
 

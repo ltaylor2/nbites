@@ -45,7 +45,7 @@ private:
 
 	// operating params
 	// TODO why 32?
-	static const int ACCEPT_THRESHOLD = 32;
+	static const int ACCEPT_THRESHOLD = 24;
 	static const int ANGLE_SPREAD  = 3;
 	static const int REFINE_STEPS = 2;
 
