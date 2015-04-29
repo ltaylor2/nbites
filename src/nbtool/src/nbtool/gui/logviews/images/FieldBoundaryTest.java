@@ -1,78 +1,83 @@
-// package nbtool.gui.logviews.images;
+package nbtool.gui.logviews.images;
 
-// import java.lang.Math;
-// import java.util.List;
+import java.lang.Math;
+import java.util.List;
 
-// import java.awt.Graphics;
-// import java.awt.image.BufferedImage;
-// import java.util.ArrayList;
-// import java.util.Arrays;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-// import nbtool.data.Log;
-// import nbtool.io.CppIO;
-// import nbtool.io.CppIO.CppFuncCall;
-// import nbtool.io.CppIO.CppFuncListener;
-// import nbtool.util.U;
-// import nbtool.gui.logviews.misc.ViewParent;
+import nbtool.data.Log;
+import nbtool.io.CppIO;
+import nbtool.io.CppIO.CppFuncCall;
+import nbtool.io.CppIO.CppFuncListener;
+import nbtool.util.U;
+import nbtool.gui.logviews.misc.ViewParent;
 
-// import messages.VisionFieldOuterClass;
-// import com.google.protobuf.InvalidProtocolBufferException;
+import messages.VisionFieldOuterClass;
+import com.google.protobuf.InvalidProtocolBufferException;
 
-// public class FieldBoundaryTest extends ViewParent implements CppFuncListener {
-// 	private VisionFieldOuterClass.Lines fieldBoundaries;
-// 	private BufferedImage img;
+public class FieldBoundaryTest extends ViewParent implements CppFuncListener{
+    private BufferedImage gImg;
+    private BufferedImage fImg;
+	private VisionFieldOuterClass.BoundaryLines boundaryLines;
 
-// 	public void paintComponent(Graphics g) {
-// 		if(img != null)
-// 			g.drawImage(img, 0, 0, null);
-// 		List<VisionFieldOuterClass.Line> lines = fieldBoundaries.getLinesList();
-// 		float r;
-// 		float t;
-// 		double x1;
-// 		double y1;
-// 		g.setColor(java.awt.Color.red);
+	public void paintComponent(Graphics g) {
+        if(gImg != null) {
+		    g.drawImage(gImg, 0, 0, null);
+        }
+		if(fImg != null) {
+			g.drawImage(fImg, 0, 400, null);
+		}
 
-// 		System.out.println("");
-// 		for(int i = 0; i < lines.size(); i++) {
-// 			r = lines.get(i).getRadius();
-//             t = lines.get(i).getAngle();
-//             x1 = r * Math.cos(t) + 160;
-//             y1 = r * Math.sin(t) + 120;
-//             System.out.println("r: " + r + " t: " + t);
-//             g.drawLine((int) x1, (int) y1, (int) (x1 + 20), (int) (y1 + 20 * Math.tan(t + Math.PI/2))); 
-//        } 
-//     }
+        List<VisionFieldOuterClass.BoundaryLines.Line> lines = boundaryLines.getLineList();
+        float r;
+        float t;
+        double x0, y0;
+        int x1, y1, x2, y2;
+        double end0, end1;
+        g.setColor(java.awt.Color.red);
+
+        System.out.println("");
+        for(int i = 0; i < lines.size(); i++) {
+            g.drawLine((int)lines.get(i).getX1(), (int)lines.get(i).getY1(),
+            		   (int)lines.get(i).getX2(), (int)lines.get(i).getY2());
+      } 
+    }
 	
-// 	@Override
-// 	public void setLog(Log newlog) {
-// 		log = newlog;
+	@Override
+	public void setLog(Log newlog) {
+		log = newlog;
 
-// 		int fi = CppIO.current.indexOfFunc("FieldBoundary");
-// 		if (fi < 0) return;
+		int fi = CppIO.current.indexOfFunc("FieldBoundary");
+		if (fi < 0) return;
 		
-// 		CppFuncCall fc = new CppFuncCall();
+		CppFuncCall fc = new CppFuncCall();
 		
-// 		fc.index = fi;
-// 		fc.name = "FieldBoundary";
-// 		fc.args = new ArrayList<Log>(Arrays.asList(log));
-// 		fc.listener = this;
+		fc.index = fi;
+		fc.name = "FieldBoundary";
+		fc.args = new ArrayList<Log>(Arrays.asList(log));
+		fc.listener = this;
 		
-// 		CppIO.current.tryAddCall(fc);
-// 	}
+		CppIO.current.tryAddCall(fc);
+	}
 	
-// 	public FieldBoundaryTest() {
-// 		super();
-// 	}
+	public FieldBoundaryTest() {
+		super();
+	}
 
-// 	@Override
-// 	public void returned(int ret, Log... out) { 
-// 		this.img = U.biFromLog(out[0]);
-//         System.out.print("image loaded");
-//         try {
-// 		    this.houghLines = VisionFieldOuterClass.Lines.parseFrom(out[1].bytes);
-//         } catch (InvalidProtocolBufferException e) {
-//             System.out.print("proto was not valid\n");
-//         }
-// 		repaint();
-// 	}
-// }
+	@Override
+	public void returned(int ret, Log... out) { 
+		this.gImg = U.biFromLog(out[0]);
+		this.fImg = U.biFromLog(out[1]);
+        System.out.print("images loaded");
+
+        try {
+		    this.boundaryLines = VisionFieldOuterClass.BoundaryLines.parseFrom(out[2].bytes);
+        } catch (InvalidProtocolBufferException e) {
+            System.out.print("proto was not valid\n");
+        }
+		repaint();
+	}
+}

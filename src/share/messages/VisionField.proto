@@ -209,3 +209,13 @@ message Lines {
     repeated Line line = 1;
 }
 
+message BoundaryLines {
+    message Line {
+	optional float X1 = 1;
+	optional float Y1 = 2;
+	optional float X2 = 3;
+	optional float Y2 = 4;
+    }
+
+    repeated Line line = 1;
+}

@@ -12,6 +12,7 @@
 #include "Images.h"
 #include "image/ImageConverterModule.cpp"
 #include "vision/Hough/HoughLineModule.cpp"
+#include "vision/FieldBoundary/FieldBoundaryModule.cpp"
 #include "RoboGrams.h"
 
 std::vector<nbfunc_t> FUNCS;
@@ -158,7 +159,81 @@ int ImageConverter_func() {
     return 0;
 }
 
-int HoughLine_func() {
+int FieldBoundary_func()
+{
+    assert(args.size() == 1);
+
+    printf("FieldBoundary_func()\n");
+
+    logio::log_t arg1 = args[0];
+    std::vector<std::string> kvp = logio::pairs(arg1.desc);
+    int width = 640;
+    int height = 480;
+
+    messages::YUVImage image(arg1.data, width, height, width);
+    portals::Message<messages::YUVImage> message(&image);
+
+    man::vision::FieldBoundaryModule module;
+    module.imageIn.setMessage(message);
+    module.run();
+
+    const messages::PackedImage<unsigned char>* gOut = module.gImage.getMessage(true).get();
+    logio::log_t gRet;
+
+    std::string gName = "type=YUVimage encoding=[Y8] width=";
+    gName += std::to_string(gOut->width());
+    gName += " height=";
+    gName += std::to_string(gOut->height());
+
+    gRet.desc = (char*)malloc(gName.size() + 1);
+    memcpy(gRet.desc, gName.c_str(), gName.size() +1);
+
+    gRet.dlen = gOut->width() * gOut->height();
+    gRet.data = (uint8_t*)malloc(gRet.dlen);
+    memcpy(gRet.data, gOut->pixelAddress(0,0), gRet.dlen);
+
+    rets.push_back(gRet);
+
+    const messages::PackedImage<unsigned char>* fOut = module.fImage.getMessage(true).get();
+    logio::log_t fRet;
+
+    std::string fName = "type=YUVimage encoding=[Y8] width=";
+    fName += std::to_string(fOut->width());
+    fName += " height=";
+    fName += std::to_string(fOut->height());
+
+    fRet.desc = (char*)malloc(gName.size() + 1);
+    memcpy(fRet.desc, fName.c_str(), fName.size() +1);
+
+    fRet.dlen = fOut->width() * fOut->height();
+    fRet.data = (uint8_t*)malloc(fRet.dlen);
+    memcpy(fRet.data, fOut->pixelAddress(0,0), fRet.dlen);
+
+    rets.push_back(fRet);
+
+    const messages::BoundaryLines* lines = module.bLineList.getMessage(true).get();
+
+    std::string lineName = "type=proto-VisionField";
+
+    logio::log_t lineRet;
+
+    lineRet.desc = (char*)malloc(lineName.size() + 1);
+    memcpy(lineRet.desc, lineName.c_str(), lineName.size() + 1);
+
+    std::string data;
+    lines->SerializeToString(&data);
+
+    lineRet.data = (uint8_t*)malloc(data.size());
+    lineRet.dlen = data.size();
+    memcpy(lineRet.data, (uint8_t*)data.c_str(), data.size());
+
+    rets.push_back(lineRet);
+
+    return 0;
+}
+
+int HoughLine_func()
+{
     assert(args.size() == 1);
 
     printf("HoughLine_func()\n");
@@ -261,11 +336,19 @@ void register_funcs() {
     ImageConverter.func = ImageConverter_func;
     FUNCS.push_back(ImageConverter);
 
+    // Encapsulated Hough Stuff
     nbfunc_t HoughLine;
     HoughLine.name = "HoughLine";
     HoughLine.args = {sYUVImage};
     HoughLine.func = HoughLine_func;
     FUNCS.push_back(HoughLine);
+
+    // Field Boundary Lines
+    nbfunc_t FieldBoundary;
+    FieldBoundary.name = "FieldBoundary";
+    FieldBoundary.args = {sYUVImage};
+    FieldBoundary.func = FieldBoundary_func;
+    FUNCS.push_back(FieldBoundary);
 }
 
 

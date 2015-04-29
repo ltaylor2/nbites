@@ -26,6 +26,8 @@ SET( FIELD_LINES_SRCS
   Hough/Line
   Hough/LineFit
   Hough/Util
+  FieldBoundary/Ransac
+  FieldBoundary/FieldBoundaryModule
   )
 
 SET( VISION_SRCS Ball

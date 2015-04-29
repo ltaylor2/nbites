@@ -112,7 +112,6 @@ void Line::adjust(std::vector<Edge> &edges, AdjustParams p)
 	tw = 0;
 	for (int i = uHistSize - 1; i >= 0; i--) {
 		tw += uHistogram[i];
-		std::cout << tw << std::endl;
 		if (tw >= p.getLineEndWeight()) {
 			end1 = uBin(i);
 			break;
@@ -143,7 +142,6 @@ void Line::uAdd(double u, double w)
 // get the uHist bin that corresponds to the correct spot along the line
 double Line::uBin(int index)
 {
-	std::cout << "Returning: " << index - (uHistSize - 1) / 2.0 << std::endl;
 	return index - (uHistSize - 1) / 2.0;
 }
 

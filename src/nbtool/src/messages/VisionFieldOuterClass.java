@@ -12257,6 +12257,1313 @@ public final class VisionFieldOuterClass {
     // @@protoc_insertion_point(class_scope:messages.Lines)
   }
 
+  public interface BoundaryLinesOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:messages.BoundaryLines)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+     */
+    java.util.List<messages.VisionFieldOuterClass.BoundaryLines.Line> 
+        getLineList();
+    /**
+     * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+     */
+    messages.VisionFieldOuterClass.BoundaryLines.Line getLine(int index);
+    /**
+     * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+     */
+    int getLineCount();
+    /**
+     * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+     */
+    java.util.List<? extends messages.VisionFieldOuterClass.BoundaryLines.LineOrBuilder> 
+        getLineOrBuilderList();
+    /**
+     * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+     */
+    messages.VisionFieldOuterClass.BoundaryLines.LineOrBuilder getLineOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code messages.BoundaryLines}
+   */
+  public static final class BoundaryLines extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:messages.BoundaryLines)
+      BoundaryLinesOrBuilder {
+    // Use BoundaryLines.newBuilder() to construct.
+    private BoundaryLines(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private BoundaryLines(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final BoundaryLines defaultInstance;
+    public static BoundaryLines getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public BoundaryLines getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private BoundaryLines(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                line_ = new java.util.ArrayList<messages.VisionFieldOuterClass.BoundaryLines.Line>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              line_.add(input.readMessage(messages.VisionFieldOuterClass.BoundaryLines.Line.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          line_ = java.util.Collections.unmodifiableList(line_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return messages.VisionFieldOuterClass.internal_static_messages_BoundaryLines_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return messages.VisionFieldOuterClass.internal_static_messages_BoundaryLines_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              messages.VisionFieldOuterClass.BoundaryLines.class, messages.VisionFieldOuterClass.BoundaryLines.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<BoundaryLines> PARSER =
+        new com.google.protobuf.AbstractParser<BoundaryLines>() {
+      public BoundaryLines parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new BoundaryLines(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BoundaryLines> getParserForType() {
+      return PARSER;
+    }
+
+    public interface LineOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:messages.BoundaryLines.Line)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>optional float X1 = 1;</code>
+       */
+      boolean hasX1();
+      /**
+       * <code>optional float X1 = 1;</code>
+       */
+      float getX1();
+
+      /**
+       * <code>optional float Y1 = 2;</code>
+       */
+      boolean hasY1();
+      /**
+       * <code>optional float Y1 = 2;</code>
+       */
+      float getY1();
+
+      /**
+       * <code>optional float X2 = 3;</code>
+       */
+      boolean hasX2();
+      /**
+       * <code>optional float X2 = 3;</code>
+       */
+      float getX2();
+
+      /**
+       * <code>optional float Y2 = 4;</code>
+       */
+      boolean hasY2();
+      /**
+       * <code>optional float Y2 = 4;</code>
+       */
+      float getY2();
+    }
+    /**
+     * Protobuf type {@code messages.BoundaryLines.Line}
+     */
+    public static final class Line extends
+        com.google.protobuf.GeneratedMessage implements
+        // @@protoc_insertion_point(message_implements:messages.BoundaryLines.Line)
+        LineOrBuilder {
+      // Use Line.newBuilder() to construct.
+      private Line(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private Line(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+      private static final Line defaultInstance;
+      public static Line getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public Line getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private Line(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 13: {
+                bitField0_ |= 0x00000001;
+                x1_ = input.readFloat();
+                break;
+              }
+              case 21: {
+                bitField0_ |= 0x00000002;
+                y1_ = input.readFloat();
+                break;
+              }
+              case 29: {
+                bitField0_ |= 0x00000004;
+                x2_ = input.readFloat();
+                break;
+              }
+              case 37: {
+                bitField0_ |= 0x00000008;
+                y2_ = input.readFloat();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return messages.VisionFieldOuterClass.internal_static_messages_BoundaryLines_Line_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return messages.VisionFieldOuterClass.internal_static_messages_BoundaryLines_Line_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                messages.VisionFieldOuterClass.BoundaryLines.Line.class, messages.VisionFieldOuterClass.BoundaryLines.Line.Builder.class);
+      }
+
+      public static com.google.protobuf.Parser<Line> PARSER =
+          new com.google.protobuf.AbstractParser<Line>() {
+        public Line parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Line(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<Line> getParserForType() {
+        return PARSER;
+      }
+
+      private int bitField0_;
+      public static final int X1_FIELD_NUMBER = 1;
+      private float x1_;
+      /**
+       * <code>optional float X1 = 1;</code>
+       */
+      public boolean hasX1() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional float X1 = 1;</code>
+       */
+      public float getX1() {
+        return x1_;
+      }
+
+      public static final int Y1_FIELD_NUMBER = 2;
+      private float y1_;
+      /**
+       * <code>optional float Y1 = 2;</code>
+       */
+      public boolean hasY1() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional float Y1 = 2;</code>
+       */
+      public float getY1() {
+        return y1_;
+      }
+
+      public static final int X2_FIELD_NUMBER = 3;
+      private float x2_;
+      /**
+       * <code>optional float X2 = 3;</code>
+       */
+      public boolean hasX2() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional float X2 = 3;</code>
+       */
+      public float getX2() {
+        return x2_;
+      }
+
+      public static final int Y2_FIELD_NUMBER = 4;
+      private float y2_;
+      /**
+       * <code>optional float Y2 = 4;</code>
+       */
+      public boolean hasY2() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional float Y2 = 4;</code>
+       */
+      public float getY2() {
+        return y2_;
+      }
+
+      private void initFields() {
+        x1_ = 0F;
+        y1_ = 0F;
+        x2_ = 0F;
+        y2_ = 0F;
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeFloat(1, x1_);
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeFloat(2, y1_);
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          output.writeFloat(3, x2_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          output.writeFloat(4, y2_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeFloatSize(1, x1_);
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeFloatSize(2, y1_);
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeFloatSize(3, x2_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeFloatSize(4, y2_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static messages.VisionFieldOuterClass.BoundaryLines.Line parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static messages.VisionFieldOuterClass.BoundaryLines.Line parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static messages.VisionFieldOuterClass.BoundaryLines.Line parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static messages.VisionFieldOuterClass.BoundaryLines.Line parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static messages.VisionFieldOuterClass.BoundaryLines.Line parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static messages.VisionFieldOuterClass.BoundaryLines.Line parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static messages.VisionFieldOuterClass.BoundaryLines.Line parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static messages.VisionFieldOuterClass.BoundaryLines.Line parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static messages.VisionFieldOuterClass.BoundaryLines.Line parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static messages.VisionFieldOuterClass.BoundaryLines.Line parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(messages.VisionFieldOuterClass.BoundaryLines.Line prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code messages.BoundaryLines.Line}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:messages.BoundaryLines.Line)
+          messages.VisionFieldOuterClass.BoundaryLines.LineOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return messages.VisionFieldOuterClass.internal_static_messages_BoundaryLines_Line_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return messages.VisionFieldOuterClass.internal_static_messages_BoundaryLines_Line_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  messages.VisionFieldOuterClass.BoundaryLines.Line.class, messages.VisionFieldOuterClass.BoundaryLines.Line.Builder.class);
+        }
+
+        // Construct using messages.VisionFieldOuterClass.BoundaryLines.Line.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          x1_ = 0F;
+          bitField0_ = (bitField0_ & ~0x00000001);
+          y1_ = 0F;
+          bitField0_ = (bitField0_ & ~0x00000002);
+          x2_ = 0F;
+          bitField0_ = (bitField0_ & ~0x00000004);
+          y2_ = 0F;
+          bitField0_ = (bitField0_ & ~0x00000008);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return messages.VisionFieldOuterClass.internal_static_messages_BoundaryLines_Line_descriptor;
+        }
+
+        public messages.VisionFieldOuterClass.BoundaryLines.Line getDefaultInstanceForType() {
+          return messages.VisionFieldOuterClass.BoundaryLines.Line.getDefaultInstance();
+        }
+
+        public messages.VisionFieldOuterClass.BoundaryLines.Line build() {
+          messages.VisionFieldOuterClass.BoundaryLines.Line result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public messages.VisionFieldOuterClass.BoundaryLines.Line buildPartial() {
+          messages.VisionFieldOuterClass.BoundaryLines.Line result = new messages.VisionFieldOuterClass.BoundaryLines.Line(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.x1_ = x1_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.y1_ = y1_;
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+            to_bitField0_ |= 0x00000004;
+          }
+          result.x2_ = x2_;
+          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+            to_bitField0_ |= 0x00000008;
+          }
+          result.y2_ = y2_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof messages.VisionFieldOuterClass.BoundaryLines.Line) {
+            return mergeFrom((messages.VisionFieldOuterClass.BoundaryLines.Line)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(messages.VisionFieldOuterClass.BoundaryLines.Line other) {
+          if (other == messages.VisionFieldOuterClass.BoundaryLines.Line.getDefaultInstance()) return this;
+          if (other.hasX1()) {
+            setX1(other.getX1());
+          }
+          if (other.hasY1()) {
+            setY1(other.getY1());
+          }
+          if (other.hasX2()) {
+            setX2(other.getX2());
+          }
+          if (other.hasY2()) {
+            setY2(other.getY2());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          messages.VisionFieldOuterClass.BoundaryLines.Line parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (messages.VisionFieldOuterClass.BoundaryLines.Line) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        private float x1_ ;
+        /**
+         * <code>optional float X1 = 1;</code>
+         */
+        public boolean hasX1() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>optional float X1 = 1;</code>
+         */
+        public float getX1() {
+          return x1_;
+        }
+        /**
+         * <code>optional float X1 = 1;</code>
+         */
+        public Builder setX1(float value) {
+          bitField0_ |= 0x00000001;
+          x1_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional float X1 = 1;</code>
+         */
+        public Builder clearX1() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          x1_ = 0F;
+          onChanged();
+          return this;
+        }
+
+        private float y1_ ;
+        /**
+         * <code>optional float Y1 = 2;</code>
+         */
+        public boolean hasY1() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>optional float Y1 = 2;</code>
+         */
+        public float getY1() {
+          return y1_;
+        }
+        /**
+         * <code>optional float Y1 = 2;</code>
+         */
+        public Builder setY1(float value) {
+          bitField0_ |= 0x00000002;
+          y1_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional float Y1 = 2;</code>
+         */
+        public Builder clearY1() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          y1_ = 0F;
+          onChanged();
+          return this;
+        }
+
+        private float x2_ ;
+        /**
+         * <code>optional float X2 = 3;</code>
+         */
+        public boolean hasX2() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        /**
+         * <code>optional float X2 = 3;</code>
+         */
+        public float getX2() {
+          return x2_;
+        }
+        /**
+         * <code>optional float X2 = 3;</code>
+         */
+        public Builder setX2(float value) {
+          bitField0_ |= 0x00000004;
+          x2_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional float X2 = 3;</code>
+         */
+        public Builder clearX2() {
+          bitField0_ = (bitField0_ & ~0x00000004);
+          x2_ = 0F;
+          onChanged();
+          return this;
+        }
+
+        private float y2_ ;
+        /**
+         * <code>optional float Y2 = 4;</code>
+         */
+        public boolean hasY2() {
+          return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+        /**
+         * <code>optional float Y2 = 4;</code>
+         */
+        public float getY2() {
+          return y2_;
+        }
+        /**
+         * <code>optional float Y2 = 4;</code>
+         */
+        public Builder setY2(float value) {
+          bitField0_ |= 0x00000008;
+          y2_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional float Y2 = 4;</code>
+         */
+        public Builder clearY2() {
+          bitField0_ = (bitField0_ & ~0x00000008);
+          y2_ = 0F;
+          onChanged();
+          return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:messages.BoundaryLines.Line)
+      }
+
+      static {
+        defaultInstance = new Line(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:messages.BoundaryLines.Line)
+    }
+
+    public static final int LINE_FIELD_NUMBER = 1;
+    private java.util.List<messages.VisionFieldOuterClass.BoundaryLines.Line> line_;
+    /**
+     * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+     */
+    public java.util.List<messages.VisionFieldOuterClass.BoundaryLines.Line> getLineList() {
+      return line_;
+    }
+    /**
+     * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+     */
+    public java.util.List<? extends messages.VisionFieldOuterClass.BoundaryLines.LineOrBuilder> 
+        getLineOrBuilderList() {
+      return line_;
+    }
+    /**
+     * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+     */
+    public int getLineCount() {
+      return line_.size();
+    }
+    /**
+     * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+     */
+    public messages.VisionFieldOuterClass.BoundaryLines.Line getLine(int index) {
+      return line_.get(index);
+    }
+    /**
+     * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+     */
+    public messages.VisionFieldOuterClass.BoundaryLines.LineOrBuilder getLineOrBuilder(
+        int index) {
+      return line_.get(index);
+    }
+
+    private void initFields() {
+      line_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < line_.size(); i++) {
+        output.writeMessage(1, line_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < line_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, line_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static messages.VisionFieldOuterClass.BoundaryLines parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static messages.VisionFieldOuterClass.BoundaryLines parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static messages.VisionFieldOuterClass.BoundaryLines parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static messages.VisionFieldOuterClass.BoundaryLines parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static messages.VisionFieldOuterClass.BoundaryLines parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static messages.VisionFieldOuterClass.BoundaryLines parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static messages.VisionFieldOuterClass.BoundaryLines parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static messages.VisionFieldOuterClass.BoundaryLines parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static messages.VisionFieldOuterClass.BoundaryLines parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static messages.VisionFieldOuterClass.BoundaryLines parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(messages.VisionFieldOuterClass.BoundaryLines prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code messages.BoundaryLines}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:messages.BoundaryLines)
+        messages.VisionFieldOuterClass.BoundaryLinesOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return messages.VisionFieldOuterClass.internal_static_messages_BoundaryLines_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return messages.VisionFieldOuterClass.internal_static_messages_BoundaryLines_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                messages.VisionFieldOuterClass.BoundaryLines.class, messages.VisionFieldOuterClass.BoundaryLines.Builder.class);
+      }
+
+      // Construct using messages.VisionFieldOuterClass.BoundaryLines.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getLineFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        if (lineBuilder_ == null) {
+          line_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          lineBuilder_.clear();
+        }
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return messages.VisionFieldOuterClass.internal_static_messages_BoundaryLines_descriptor;
+      }
+
+      public messages.VisionFieldOuterClass.BoundaryLines getDefaultInstanceForType() {
+        return messages.VisionFieldOuterClass.BoundaryLines.getDefaultInstance();
+      }
+
+      public messages.VisionFieldOuterClass.BoundaryLines build() {
+        messages.VisionFieldOuterClass.BoundaryLines result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public messages.VisionFieldOuterClass.BoundaryLines buildPartial() {
+        messages.VisionFieldOuterClass.BoundaryLines result = new messages.VisionFieldOuterClass.BoundaryLines(this);
+        int from_bitField0_ = bitField0_;
+        if (lineBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            line_ = java.util.Collections.unmodifiableList(line_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.line_ = line_;
+        } else {
+          result.line_ = lineBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof messages.VisionFieldOuterClass.BoundaryLines) {
+          return mergeFrom((messages.VisionFieldOuterClass.BoundaryLines)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(messages.VisionFieldOuterClass.BoundaryLines other) {
+        if (other == messages.VisionFieldOuterClass.BoundaryLines.getDefaultInstance()) return this;
+        if (lineBuilder_ == null) {
+          if (!other.line_.isEmpty()) {
+            if (line_.isEmpty()) {
+              line_ = other.line_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureLineIsMutable();
+              line_.addAll(other.line_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.line_.isEmpty()) {
+            if (lineBuilder_.isEmpty()) {
+              lineBuilder_.dispose();
+              lineBuilder_ = null;
+              line_ = other.line_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              lineBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getLineFieldBuilder() : null;
+            } else {
+              lineBuilder_.addAllMessages(other.line_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        messages.VisionFieldOuterClass.BoundaryLines parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (messages.VisionFieldOuterClass.BoundaryLines) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<messages.VisionFieldOuterClass.BoundaryLines.Line> line_ =
+        java.util.Collections.emptyList();
+      private void ensureLineIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          line_ = new java.util.ArrayList<messages.VisionFieldOuterClass.BoundaryLines.Line>(line_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          messages.VisionFieldOuterClass.BoundaryLines.Line, messages.VisionFieldOuterClass.BoundaryLines.Line.Builder, messages.VisionFieldOuterClass.BoundaryLines.LineOrBuilder> lineBuilder_;
+
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public java.util.List<messages.VisionFieldOuterClass.BoundaryLines.Line> getLineList() {
+        if (lineBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(line_);
+        } else {
+          return lineBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public int getLineCount() {
+        if (lineBuilder_ == null) {
+          return line_.size();
+        } else {
+          return lineBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public messages.VisionFieldOuterClass.BoundaryLines.Line getLine(int index) {
+        if (lineBuilder_ == null) {
+          return line_.get(index);
+        } else {
+          return lineBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public Builder setLine(
+          int index, messages.VisionFieldOuterClass.BoundaryLines.Line value) {
+        if (lineBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureLineIsMutable();
+          line_.set(index, value);
+          onChanged();
+        } else {
+          lineBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public Builder setLine(
+          int index, messages.VisionFieldOuterClass.BoundaryLines.Line.Builder builderForValue) {
+        if (lineBuilder_ == null) {
+          ensureLineIsMutable();
+          line_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          lineBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public Builder addLine(messages.VisionFieldOuterClass.BoundaryLines.Line value) {
+        if (lineBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureLineIsMutable();
+          line_.add(value);
+          onChanged();
+        } else {
+          lineBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public Builder addLine(
+          int index, messages.VisionFieldOuterClass.BoundaryLines.Line value) {
+        if (lineBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureLineIsMutable();
+          line_.add(index, value);
+          onChanged();
+        } else {
+          lineBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public Builder addLine(
+          messages.VisionFieldOuterClass.BoundaryLines.Line.Builder builderForValue) {
+        if (lineBuilder_ == null) {
+          ensureLineIsMutable();
+          line_.add(builderForValue.build());
+          onChanged();
+        } else {
+          lineBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public Builder addLine(
+          int index, messages.VisionFieldOuterClass.BoundaryLines.Line.Builder builderForValue) {
+        if (lineBuilder_ == null) {
+          ensureLineIsMutable();
+          line_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          lineBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public Builder addAllLine(
+          java.lang.Iterable<? extends messages.VisionFieldOuterClass.BoundaryLines.Line> values) {
+        if (lineBuilder_ == null) {
+          ensureLineIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, line_);
+          onChanged();
+        } else {
+          lineBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public Builder clearLine() {
+        if (lineBuilder_ == null) {
+          line_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          lineBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public Builder removeLine(int index) {
+        if (lineBuilder_ == null) {
+          ensureLineIsMutable();
+          line_.remove(index);
+          onChanged();
+        } else {
+          lineBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public messages.VisionFieldOuterClass.BoundaryLines.Line.Builder getLineBuilder(
+          int index) {
+        return getLineFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public messages.VisionFieldOuterClass.BoundaryLines.LineOrBuilder getLineOrBuilder(
+          int index) {
+        if (lineBuilder_ == null) {
+          return line_.get(index);  } else {
+          return lineBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public java.util.List<? extends messages.VisionFieldOuterClass.BoundaryLines.LineOrBuilder> 
+           getLineOrBuilderList() {
+        if (lineBuilder_ != null) {
+          return lineBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(line_);
+        }
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public messages.VisionFieldOuterClass.BoundaryLines.Line.Builder addLineBuilder() {
+        return getLineFieldBuilder().addBuilder(
+            messages.VisionFieldOuterClass.BoundaryLines.Line.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public messages.VisionFieldOuterClass.BoundaryLines.Line.Builder addLineBuilder(
+          int index) {
+        return getLineFieldBuilder().addBuilder(
+            index, messages.VisionFieldOuterClass.BoundaryLines.Line.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .messages.BoundaryLines.Line line = 1;</code>
+       */
+      public java.util.List<messages.VisionFieldOuterClass.BoundaryLines.Line.Builder> 
+           getLineBuilderList() {
+        return getLineFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          messages.VisionFieldOuterClass.BoundaryLines.Line, messages.VisionFieldOuterClass.BoundaryLines.Line.Builder, messages.VisionFieldOuterClass.BoundaryLines.LineOrBuilder> 
+          getLineFieldBuilder() {
+        if (lineBuilder_ == null) {
+          lineBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              messages.VisionFieldOuterClass.BoundaryLines.Line, messages.VisionFieldOuterClass.BoundaryLines.Line.Builder, messages.VisionFieldOuterClass.BoundaryLines.LineOrBuilder>(
+                  line_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          line_ = null;
+        }
+        return lineBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:messages.BoundaryLines)
+    }
+
+    static {
+      defaultInstance = new BoundaryLines(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:messages.BoundaryLines)
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_messages_VisionField_descriptor;
   private static
@@ -12302,6 +13609,16 @@ public final class VisionFieldOuterClass {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_messages_Lines_Line_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_messages_BoundaryLines_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_messages_BoundaryLines_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_messages_BoundaryLines_Line_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_messages_BoundaryLines_Line_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -12403,7 +13720,10 @@ public final class VisionFieldOuterClass {
       "istance_r\030\003 \001(\002\"n\n\005Lines\022\"\n\004line\030\001 \003(\0132\024",
       ".messages.Lines.Line\032A\n\004Line\022\r\n\005angle\030\001 " +
       "\001(\002\022\016\n\006radius\030\002 \001(\002\022\014\n\004end0\030\003 \001(\002\022\014\n\004end" +
-      "1\030\004 \001(\002B\027B\025VisionFieldOuterClass"
+      "1\030\004 \001(\002\"s\n\rBoundaryLines\022*\n\004line\030\001 \003(\0132\034" +
+      ".messages.BoundaryLines.Line\0326\n\004Line\022\n\n\002" +
+      "X1\030\001 \001(\002\022\n\n\002Y1\030\002 \001(\002\022\n\n\002X2\030\003 \001(\002\022\n\n\002Y2\030\004" +
+      " \001(\002B\027B\025VisionFieldOuterClass"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -12471,6 +13791,18 @@ public final class VisionFieldOuterClass {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_messages_Lines_Line_descriptor,
         new java.lang.String[] { "Angle", "Radius", "End0", "End1", });
+    internal_static_messages_BoundaryLines_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_messages_BoundaryLines_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_messages_BoundaryLines_descriptor,
+        new java.lang.String[] { "Line", });
+    internal_static_messages_BoundaryLines_Line_descriptor =
+      internal_static_messages_BoundaryLines_descriptor.getNestedTypes().get(0);
+    internal_static_messages_BoundaryLines_Line_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_messages_BoundaryLines_Line_descriptor,
+        new java.lang.String[] { "X1", "Y1", "X2", "Y2", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

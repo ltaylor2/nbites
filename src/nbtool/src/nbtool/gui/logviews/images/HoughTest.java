@@ -31,24 +31,27 @@ public class HoughTest extends ViewParent implements CppFuncListener{
 			g.drawImage(edgeImg, 0, 400, null);
 		}
 
-        List<VisionFieldOuterClass.Line> lines = houghLines.getLinesList();
+        List<VisionFieldOuterClass.Lines.Line> lines = houghLines.getLineList();
         float r;
         float t;
         double x0, y0;
         int x1, y1, x2, y2;
+        double end0, end1;
         g.setColor(java.awt.Color.red);
 
         System.out.println("");
         for(int i = 0; i < lines.size(); i++) {
             r = lines.get(i).getRadius();
             t = lines.get(i).getAngle();
+            end0 = lines.get(i).getEnd0();
+            end1 = lines.get(i).getEnd1();
             // TODO line protobuff with images
             x0 = r * Math.cos(t) + yImg.getWidth() / 2;
             y0 = -r * Math.sin(t) + yImg.getHeight() / 2;
-            x1 = (int)Math.round(x0 - 50 * Math.sin(t));
-            y1 = (int)Math.round(y0 - 50 * Math.cos(t));
-            x2 = (int)Math.round(x0 + 50 * Math.sin(t));
-            y2 = (int)Math.round(y0 + 50 * Math.cos(t));
+            x1 = (int)Math.round(x0 + end0 * Math.sin(t));
+            y1 = (int)Math.round(y0 + end0 * Math.cos(t));
+            x2 = (int)Math.round(x0 + end1 * Math.sin(t));
+            y2 = (int)Math.round(y0 + end1 * Math.cos(t));
             System.out.println("r: " + r + " t: " + t);
             g.drawLine(x1, y1, x2, y2);
       } 
