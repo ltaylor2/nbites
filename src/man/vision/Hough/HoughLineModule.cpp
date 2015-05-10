@@ -1,5 +1,6 @@
 #include "HoughLineModule.h"
 #include "Gradient.h"
+#include "vision/FieldBoundary/FieldBoundaryModule.h"
 
 #include <iostream>
 #include <fstream>
@@ -17,6 +18,10 @@ HoughLineModule::HoughLineModule()
 	  houghImage(base()),
 	  houghLineList(base()),
 	  edgeImage(base()),
+	  fieldEdgeImage(base()),
+	  greenImage(base()),
+	  fieldPointImage(base()),
+	  bLineList(base()),
 	  hs()
 {}
 
@@ -39,6 +44,7 @@ void HoughLineModule::run_() {
 
 	// y-image is a pointer to 16-bit ints
 	const messages::PackedImage<short unsigned int>* yImage = module.yImage.getMessage(true).get();
+	const messages::PackedImage<unsigned char>* gImage = module.greenImage.getMessage(true).get();
 
 	std::cout << "Building Gradient" << std::endl;
 
@@ -49,7 +55,7 @@ void HoughLineModule::run_() {
 
 	// get the edges with (here) a hardcoded noise threshold
 	int noiseThr = 17;
-	std::vector<Edge> edges = gradient.getEdges(noiseThr);
+	std::vector<Edge> edges = gradient.getEdges(noiseThr, gImage->pixelAddress(0,0));
 
 	// get the magnitudes for the magnitude image
 	// int *magnitudes = gradient.getMagnitudes();
@@ -77,17 +83,30 @@ void HoughLineModule::run_() {
 	
 	// get the edges for the edge image
 	bool *edgeMarkers = gradient.getEdgeMarkers();
-
 	// edge at point ? white : black
-	HeapPixelBuffer *newTempBuffer = new HeapPixelBuffer(320*240*2);
-    PackedImage16 edgeOutput(newTempBuffer, 320, 240, 320);
+	HeapPixelBuffer *tempBuffer = new HeapPixelBuffer(320*240*2);
+    PackedImage16 edgeOutput(tempBuffer, 320, 240, 320);
     for (int y = 0; y < edgeOutput.height(); y++) {
     	for (int x = 0; x < edgeOutput.width(); x++) {
     		if (edgeMarkers[x + edgeOutput.width() * y]) {
-    			*edgeOutput.pixelAddress(x,y) = 255;
+    			*edgeOutput.pixelAddress(x,y) = 511;
     		}
     		else 
     			*edgeOutput.pixelAddress(x,y) = 0;
+    	}
+    }
+
+    bool *fieldEdgeMarkers = gradient.getFieldEdgeMarkers();
+    // get the edges on the field
+    HeapPixelBuffer *newTempBuffer = new HeapPixelBuffer(320*240*2);
+    PackedImage16 fieldEdgeOutput(newTempBuffer, 320, 240, 320);
+    for (int y = 0; y < fieldEdgeOutput.height(); y++) {
+    	for (int x = 0; x < fieldEdgeOutput.width(); x++) {
+    		if (fieldEdgeMarkers[x + fieldEdgeOutput.width() * y]) {
+    			*fieldEdgeOutput.pixelAddress(x,y) = 511;
+    		}
+    		else 
+    			*fieldEdgeOutput.pixelAddress(x,y) = 0;
     	}
     }
 
@@ -108,39 +127,42 @@ void HoughLineModule::run_() {
 	messages::Lines* lines = new messages::Lines;
 
 	// fill the out message with lines
-	for (int i = 0; i < fieldLines.size(); i++) {
+	for (int i = 0; i < rawLines.size(); i++) {
 		messages::Lines_Line* aLine;
 
-		// aLine = lines->add_line();
-		// aLine->set_radius(rawLines[i].getR());
-		// aLine->set_angle(rawLines[i].getT());
-		// aLine->set_U0(rawLines[i].getEnd0());
-		// aLine->set_U1(rawLines[i].getEnd1());
-
 		aLine = lines->add_line();
-		aLine->set_radius(fieldLines[i].getLine1().getR());
-		aLine->set_angle(fieldLines[i].getLine1().getT());
-		aLine->set_end0(fieldLines[i].getLine1().getEnd0());
-		aLine->set_end1(fieldLines[i].getLine1().getEnd1());
+		aLine->set_radius(rawLines[i].getR());
+		aLine->set_angle(rawLines[i].getT());
+		aLine->set_end0(rawLines[i].getEnd0());
+		aLine->set_end1(rawLines[i].getEnd1());
 
-		std::cout << "Pair " << i << " Line 1 with R:" << fieldLines[i].getLine1().getR() << " T: " << fieldLines[i].getLine1().getT() << std::endl;
+		// std::cout << "Line " << i << " 1: " << rawLines[i].getEnd0() << " 2: " << rawLines[i].getEnd1() << std::endl;
+		// aLine = lines->add_line();
+		// aLine->set_radius(fieldLines[i].getLine1().getR());
+		// aLine->set_angle(fieldLines[i].getLine1().getT());
+		// aLine->set_end0(fieldLines[i].getLine1().getEnd0());
+		// aLine->set_end1(fieldLines[i].getLine1().getEnd1());
 
-		messages::Lines_Line* bLine;
-		bLine = lines->add_line();
-		bLine->set_radius(fieldLines[i].getLine2().getR());
-		bLine->set_angle(fieldLines[i].getLine2().getT());
-		bLine->set_end0(fieldLines[i].getLine2().getEnd0());
-		bLine->set_end1(fieldLines[i].getLine2().getEnd1());
+		// std::cout << "Pair " << i << " Line 1 with R:" << fieldLines[i].getLine1().getR() << " T: " << fieldLines[i].getLine1().getT() << std::endl;
 
-		std::cout << "Pair " << i << " Line 2 with R:" << fieldLines[i].getLine2().getR() << " T: " << fieldLines[i].getLine2().getT() << std::endl;
+		// messages::Lines_Line* bLine;
+		// bLine = lines->add_line();
+		// bLine->set_radius(fieldLines[i].getLine2().getR());
+		// bLine->set_angle(fieldLines[i].getLine2().getT());
+		// bLine->set_end0(fieldLines[i].getLine2().getEnd0());
+		// bLine->set_end1(fieldLines[i].getLine2().getEnd1());
+
+		// std::cout << "Pair " << i << " Line 2 with R:" << fieldLines[i].getLine2().getR() << " T: " << fieldLines[i].getLine2().getT() << std::endl;
 	}
 
 	// avoid errors from empty lines
 	if (rawLines.size() == 0) {
 		messages::Lines_Line* aLine;
 		aLine = lines->add_line();
-		aLine->set_radius(400);
+		aLine->set_radius(0);
 		aLine->set_angle(0);
+		aLine->set_end0(-50);
+		aLine->set_end1(50);
 	}
 		
 	std::cout << "Found Field Lines" << std::endl;
@@ -150,6 +172,19 @@ void HoughLineModule::run_() {
 	houghImage.setMessage(Message<PackedImage16>(yImage));
 	houghLineList.setMessage(Message<messages::Lines>(lines));
 	edgeImage.setMessage(Message<PackedImage16>(&edgeOutput));
+	fieldEdgeImage.setMessage(Message<PackedImage16>(&fieldEdgeOutput));
+
+	// now, for easy display and comparison to edges fetched directly from the green image
+	// NOTE using the FieldBoundaryModule runs some stuff twice, like image aquisition and color
+	// level stuff, but this shouldn't be being used for anything that takes speed into consideration anyways
+	// this is just for independent study display purposes, basically.
+	FieldBoundaryModule fModule;
+	fModule.imageIn.setMessage(message);
+	fModule.run();
+
+	greenImage.setMessage(Message<PackedImage8>(fModule.gImage.getMessage(true).get()));
+	fieldPointImage.setMessage(Message<PackedImage8>(fModule.fImage.getMessage(true).get()));
+	bLineList.setMessage(Message<BoundaryLines>(fModule.bLineList.getMessage(true).get()));
 }
 
 }

@@ -67,19 +67,34 @@ int Gradient::getMag(int x, int y)
 
 // TODO make return a pointer to a vector
 // get a list of edges from the gradient image
-std::vector<Edge> Gradient::getEdges(int noiseThr)
+std::vector<Edge> Gradient::getEdges(int noiseThr, uint8_t* gPixels)
 {
 	// tables that show the directions of pixel neighbors
-	int dXNeighbors[] = { 1,  1,  0, -1, -1, -1, 0, 1};
-	int dYNeighbors[] = { 0, -1, -1, -1,  0 , 1, 1, 1};
+	int dXNeighbors[] = { 1,  1,  0, -1, -1, -1, 0, 1 };
+	int dYNeighbors[] = { 0, -1, -1, -1,  0 , 1, 1, 1 };
 
+
+	// tables for octant kernels
+	// TODO fundamental relationship between direction and kernel values?
+	int oct1[] = { 1, 0, -1, 1, 0, -1, 1, 0, -1 };
+	int oct2[] = { 0, -1, -1, 1, 0, -1, 1, 1, 0 };
+	int oct3[] = { -1, -1, -1, 0, 0, 0, 1, 1, 1 };
+	int oct4[] = { -1, -1, 0, -1, 0, 1, 0, 1, 1 };
+	int oct5[] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
+	int oct6[] = { 0, 1, 1, -1, 0, 1, -1, -1, 0 };
+	int oct7[] = { 1, 1, 1, 0, 0, 0, -1, -1, -1 };
+	int oct8[] = { 1, 1, 0, 1, 0, -1, 0, -1, -1 };
+
+	int* octants[] = { oct1, oct2, oct3, oct4, oct5, oct6, oct7, oct8 };
 	std::vector<Edge> edges;
 
 	// keep track of where an edge is pushed from ((x,y)), to visualize
 	// in an output .txt file
 	edgeTrue = new bool[width * height];
+	fieldEdgeTrue = new bool[width * height];
 	for (int i = 0; i < width * height; i++) {
 		edgeTrue[i] = false;
+		fieldEdgeTrue[i] = false;
 	}
 
 	noiseThr = noiseThr * noiseThr << 4; // adjusted for mag^2 like stored in gradient
@@ -95,11 +110,39 @@ std::vector<Edge> Gradient::getEdges(int noiseThr)
 					&& z >= mag[(x - dXNeighbors[a]) + width * (y - dYNeighbors[a])]) {
 					
 					// found an edge!
-					edges.push_back(e);
 					edgeTrue[x + width * y] = true;
+
+					// now we have to check if it's in the field
+					// do this by checking fetching  pixels directly from the green image
+					// and checking them appropriately based on the direction of the edge
+					// first find the direction of the edge to the nearest octant
+
+					// get angle between 0 and 2PI
+					double edgeAngle = (e.getDir8() + 0.5) * M_PI / 128.0;
+					double angle = edgeAngle - floor(edgeAngle / (2 * M_PI)) * 2.0 * M_PI;
+
+					// find octant 
+					int octVal = floor(angle * 4 / M_PI);
+					// now calc score
+					int fieldScore = 0;
+					int x = e.getX() + width / 2;
+					int y = height / 2 - e.getY();
+					for (int r = -1; r < 2; r++) {
+						for (int c = -1; c < 2; c++) {
+							fieldScore += octants[octVal][(r + 1) + 3 * (c + 1)] * gPixels[(x + r) + width * (y + c)];
+						}
+					}
+
+					std::cout << octVal << "  " << fieldScore << std::endl;
+
+					if (fieldScore >= ACCEPT_THRESHOLD) {
+						edges.push_back(e);
+						fieldEdgeTrue[x + width * y] = true;
+					}
 				}
 			}
 		}
+
 	}
 
 	return edges;
@@ -113,6 +156,7 @@ Gradient::~Gradient() {
 	delete[] gy;
 	delete[] mag;
 	delete[] edgeTrue;
+	delete[] fieldEdgeTrue;
 }
 
 }

@@ -31,26 +31,27 @@ void HoughSpace::run(std::vector<Edge>& edges, AdjustParams p)
 	getPeaks();
 
 	std::cout << "Processed Lines: " << lines.size() << std::endl;
+	if (lines.size() > 0) {
+		// Passed this point, we suppress lines and adjust them to
+		// better find field lines. For current debugging, just 
+		// ending with getPeaks(), which finds the lines.
+		// TODO DEFINITELY change the edges to something that will
+		// store dynamic dimensions
+		// suppress(edges.getCenterX(), edges.getCenterY());
 
-	// Passed this point, we suppress lines and adjust them to
-	// better find field lines. For current debugging, just 
-	// ending with getPeaks(), which finds the lines.
-	// TODO DEFINITELY change the edges to something that will
-	// store dynamic dimensions
-	// suppress(edges.getCenterX(), edges.getCenterY());
+		suppress(320, 240);
 
-	suppress(320, 240);
+		std::cout << "Post-Suppression Lines: " << lines.size() << std::endl;
 
-	std::cout << "Post-Suppression Lines: " << lines.size() << std::endl;
+		// TODO, array of params to change refinement
+		for (int i = 0; i < REFINE_STEPS; i++) {
+			adjust(edges, p);
+		}
 
-	// TODO, array of params to change refinement
-	for (int i = 0; i < REFINE_STEPS; i++) {
-		adjust(edges, p);
+		std::cout << "Post-Adjusted Lines: " << lines.size() << std::endl;
+
+		findFieldLines();
 	}
-
-	std::cout << "Post-Adjusted Lines: " << lines.size() << std::endl;
-
-	findFieldLines();
 }
 
 // R coord in Hough space for a boundary point with direction t
@@ -104,7 +105,8 @@ void HoughSpace::getPeaks()
 	int dRNeighbors[] = { 1, 1, 0, -1};
 	int dTNeighbors[] = { 0, 1, 1, 1};
 
-	int threshold = 4 * ACCEPT_THRESHOLD; // smoothing w/ gain 4 (?)
+	// int threshold = 4 * ACCEPT_THRESHOLD; // smoothing w/ gain 4
+	int threshold = 15 * ACCEPT_THRESHOLD; // NOTE finding that much threshold value works well
 
 	for (int t = 0; t < T_SPAN; t++) {
 		for (int r = 2; r < R_SPAN - 2; r++)
@@ -125,6 +127,7 @@ void HoughSpace::getPeaks()
 									   	 r - R_SPAN / 2 + 0.5,
 									     (t + 0.5) * M_PI / 128.0, 
 									     z >> 2));
+					std::cout << "curr: " << lines.size() << std::endl;
 				}
 			}
 		}
@@ -187,7 +190,7 @@ void HoughSpace::adjust(std::vector<Edge>& edges, AdjustParams p)
 	while (i < lines.size()) {
 		lines[i].adjust(edges, p);
 
-		if (lines[i].getScore() < 100) {
+		if (lines[i].getScore() < ACCEPT_THRESHOLD) {
 			lines.erase(lines.begin() + i);
 		}
 		else

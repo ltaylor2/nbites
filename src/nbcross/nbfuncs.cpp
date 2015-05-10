@@ -303,6 +303,75 @@ int HoughLine_func()
 
     rets.push_back(edgeRet);
 
+    const messages::PackedImage<short unsigned int>* fEdgeImage = module.fieldEdgeImage.getMessage(true).get();
+
+    logio::log_t fEdgeRet;
+    std::string fEdgeName = "type=YUVImage encoding=[Y16] width=";
+    fEdgeName += std::to_string(fEdgeImage->width());
+    fEdgeName += " height=";
+    fEdgeName += std::to_string(fEdgeImage->height());
+
+    fEdgeRet.desc = (char*)malloc(fEdgeName.size() + 1);
+    memcpy(fEdgeRet.desc, fEdgeName.c_str(), fEdgeName.size() + 1);
+
+    fEdgeRet.dlen = fEdgeImage->width() * fEdgeImage->height() * 2;
+    fEdgeRet.data = (uint8_t*)malloc(fEdgeRet.dlen);
+    memcpy(fEdgeRet.data, fEdgeImage->pixelAddress(0,0), fEdgeRet.dlen);
+
+    rets.push_back(fEdgeRet);
+
+    const messages::PackedImage<unsigned char>* gOut = module.greenImage.getMessage(true).get();
+    logio::log_t gRet;
+
+    std::string gName = "type=YUVimage encoding=[Y8] width=";
+    gName += std::to_string(gOut->width());
+    gName += " height=";
+    gName += std::to_string(gOut->height());
+
+    gRet.desc = (char*)malloc(gName.size() + 1);
+    memcpy(gRet.desc, gName.c_str(), gName.size() +1);
+
+    gRet.dlen = gOut->width() * gOut->height();
+    gRet.data = (uint8_t*)malloc(gRet.dlen);
+    memcpy(gRet.data, gOut->pixelAddress(0,0), gRet.dlen);
+
+    rets.push_back(gRet);
+
+    const messages::PackedImage<unsigned char>* fOut = module.fieldPointImage.getMessage(true).get();
+    logio::log_t fRet;
+
+    std::string fName = "type=YUVimage encoding=[Y8] width=";
+    fName += std::to_string(fOut->width());
+    fName += " height=";
+    fName += std::to_string(fOut->height());
+
+    fRet.desc = (char*)malloc(gName.size() + 1);
+    memcpy(fRet.desc, fName.c_str(), fName.size() +1);
+
+    fRet.dlen = fOut->width() * fOut->height();
+    fRet.data = (uint8_t*)malloc(fRet.dlen);
+    memcpy(fRet.data, fOut->pixelAddress(0,0), fRet.dlen);
+
+    rets.push_back(fRet);
+
+    const messages::BoundaryLines* bLines = module.bLineList.getMessage(true).get();
+
+    std::string bLineName = "type=proto-VisionField";
+
+    logio::log_t bLineRet;
+
+    bLineRet.desc = (char*)malloc(bLineName.size() + 1);
+    memcpy(bLineRet.desc, bLineName.c_str(), bLineName.size() + 1);
+
+    std::string bData;
+    bLines->SerializeToString(&bData);
+
+    bLineRet.data = (uint8_t*)malloc(bData.size());
+    bLineRet.dlen = bData.size();
+    memcpy(bLineRet.data, (uint8_t*)bData.c_str(), bData.size());
+
+    rets.push_back(bLineRet);
+
     return 0;
 }
 

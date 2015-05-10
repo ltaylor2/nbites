@@ -35,13 +35,23 @@ public:
 	// output the image, just the y-image that was put in for now
 	portals::OutPortal<messages::PackedImage16> houghImage;
 
-	// sends out the line information to draw the lines back in
-	// nbtool view
+	// sends out the line information for found houghLines, either field lines or otherwise
 	portals::OutPortal<messages::Lines> houghLineList;
 	
 	// sends out the edge-marked image
 	portals::OutPortal<messages::PackedImage16> edgeImage;
 
+	// seonds out the image marked with edges calculated to be on the field
+	portals::OutPortal<messages::PackedImage16> fieldEdgeImage;
+
+	// sends out the green field image
+	portals::OutPortal<messages::PackedImage8> greenImage;
+
+	// sends out the marked point image
+	portals::OutPortal<messages::PackedImage8> fieldPointImage;
+
+	// sends out the marked field lines on the green image
+	portals::OutPortal<messages::BoundaryLines> bLineList;
 
 	void run_();
 

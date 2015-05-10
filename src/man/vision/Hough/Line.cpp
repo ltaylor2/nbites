@@ -117,7 +117,7 @@ void Line::adjust(std::vector<Edge> &edges, AdjustParams p)
 			break;
 		}
 	}
-
+	
 	// now adjust R and T w/ line fit
 	// TODO understand unit vectors better
 	double r = fit.getCenterX() * fit.getSecondPrincipalAxisU() + fit.getCenterY() * fit.getSecondPrincipalAxisV();

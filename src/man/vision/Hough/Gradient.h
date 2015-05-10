@@ -34,15 +34,18 @@ public:
 
 	int getMag(int x, int y);
 	bool* getEdgeMarkers() { return edgeTrue; }
+	bool* getFieldEdgeMarkers() { return fieldEdgeTrue; }
 	int* getMagnitudes() { return mag; }
 
-	std::vector<Edge> getEdges(int noiseThr);
+	std::vector<Edge> getEdges(int noiseThr, uint8_t* gPixels);
 
 private:
+	static const int ACCEPT_THRESHOLD = 120;
 	int *gx;
 	int *gy;
 	int *mag;
 	bool *edgeTrue;
+	bool *fieldEdgeTrue;
 	int width, height;
 };
 

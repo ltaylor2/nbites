@@ -20,15 +20,29 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 public class HoughTest extends ViewParent implements CppFuncListener{
 	private VisionFieldOuterClass.Lines houghLines;
+	private VisionFieldOuterClass.BoundaryLines fieldLines;
     private BufferedImage yImg;
     private BufferedImage edgeImg;
+    private BufferedImage fieldEdgeImg;
+    private BufferedImage gImg;
+    private BufferedImage fImg;
+
 
 	public void paintComponent(Graphics g) {
-        if(yImg != null) {
+        if (yImg != null) {
 		    g.drawImage(yImg, 0, 0, null);
         }
-		if(edgeImg != null) {
-			g.drawImage(edgeImg, 0, 400, null);
+		if (edgeImg != null) {
+			g.drawImage(edgeImg, 0, 280, null);
+		}
+		if (fieldEdgeImg != null) {
+			g.drawImage(fieldEdgeImg, 0, 560, null);
+		}
+		if (gImg != null) {
+			g.drawImage(gImg, 400, 0, null);
+		}
+		if (fImg != null) {
+			g.drawImage(fImg, 400, 280, null);
 		}
 
         List<VisionFieldOuterClass.Lines.Line> lines = houghLines.getLineList();
@@ -39,8 +53,7 @@ public class HoughTest extends ViewParent implements CppFuncListener{
         double end0, end1;
         g.setColor(java.awt.Color.red);
 
-        System.out.println("");
-        for(int i = 0; i < lines.size(); i++) {
+        for (int i = 0; i < lines.size(); i++) {
             r = lines.get(i).getRadius();
             t = lines.get(i).getAngle();
             end0 = lines.get(i).getEnd0();
@@ -52,9 +65,16 @@ public class HoughTest extends ViewParent implements CppFuncListener{
             y1 = (int)Math.round(y0 + end0 * Math.cos(t));
             x2 = (int)Math.round(x0 + end1 * Math.sin(t));
             y2 = (int)Math.round(y0 + end1 * Math.cos(t));
-            System.out.println("r: " + r + " t: " + t);
             g.drawLine(x1, y1, x2, y2);
-      } 
+      	} 
+
+      	List<VisionFieldOuterClass.BoundaryLines.Line> bLines = fieldLines.getLineList();
+      	for (int i = 0; i < bLines.size(); i++) {
+      		// NOTE image is being drawn 400 to the right on the view
+      		// for independent study display purposes
+            g.drawLine((int)bLines.get(i).getX1() + 400, (int)bLines.get(i).getY1(),
+            		   (int)bLines.get(i).getX2() + 400, (int)bLines.get(i).getY2());
+      	}
     }
 	
 	@Override
@@ -82,13 +102,21 @@ public class HoughTest extends ViewParent implements CppFuncListener{
 	public void returned(int ret, Log... out) { 
 		this.yImg = U.biFromLog(out[0]);
 		this.edgeImg = U.biFromLog(out[2]);
-
+		this.fieldEdgeImg = U.biFromLog(out[3]);
+		this.gImg = U.biFromLog(out[4]);
+		this.fImg = U.biFromLog(out[5]);
         System.out.print("image loaded");
         try {
 		    this.houghLines = VisionFieldOuterClass.Lines.parseFrom(out[1].bytes);
         } catch (InvalidProtocolBufferException e) {
             System.out.print("proto was not valid\n");
         }
+        try {
+        	this.fieldLines = VisionFieldOuterClass.BoundaryLines.parseFrom(out[6].bytes);
+        } catch (InvalidProtocolBufferException e) {
+        	System.out.print("proto was not valid\n");
+        }
+
 		repaint();
 	}
 }

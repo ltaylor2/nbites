@@ -25,7 +25,7 @@ public:
 	void run_();
 
 private:
-	static const int FIELD_EDGE_THRESHOLD = 2000;
+	static const int FIELD_EDGE_THRESHOLD = 1000;
 	static const int RANSAC_ITERATIONS = 5000;
 	static const int RANSAC_ERROR_THRESH = 4;
 
