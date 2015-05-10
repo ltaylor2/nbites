@@ -127,34 +127,34 @@ void HoughLineModule::run_() {
 	messages::Lines* lines = new messages::Lines;
 
 	// fill the out message with lines
-	for (int i = 0; i < rawLines.size(); i++) {
+	for (int i = 0; i < fieldLines.size(); i++) {
 		messages::Lines_Line* aLine;
-
 		aLine = lines->add_line();
-		aLine->set_radius(rawLines[i].getR());
-		aLine->set_angle(rawLines[i].getT());
-		aLine->set_end0(rawLines[i].getEnd0());
-		aLine->set_end1(rawLines[i].getEnd1());
+		aLine->set_radius(fieldLines[i].getLine1().getR());
+		aLine->set_angle(fieldLines[i].getLine1().getT());
+		aLine->set_end0(fieldLines[i].getLine1().getEnd0());
+		aLine->set_end1(fieldLines[i].getLine1().getEnd1());
 
-		// std::cout << "Line " << i << " 1: " << rawLines[i].getEnd0() << " 2: " << rawLines[i].getEnd1() << std::endl;
-		// aLine = lines->add_line();
-		// aLine->set_radius(fieldLines[i].getLine1().getR());
-		// aLine->set_angle(fieldLines[i].getLine1().getT());
-		// aLine->set_end0(fieldLines[i].getLine1().getEnd0());
-		// aLine->set_end1(fieldLines[i].getLine1().getEnd1());
 
-		// std::cout << "Pair " << i << " Line 1 with R:" << fieldLines[i].getLine1().getR() << " T: " << fieldLines[i].getLine1().getT() << std::endl;
-
-		// messages::Lines_Line* bLine;
-		// bLine = lines->add_line();
-		// bLine->set_radius(fieldLines[i].getLine2().getR());
-		// bLine->set_angle(fieldLines[i].getLine2().getT());
-		// bLine->set_end0(fieldLines[i].getLine2().getEnd0());
-		// bLine->set_end1(fieldLines[i].getLine2().getEnd1());
-
-		// std::cout << "Pair " << i << " Line 2 with R:" << fieldLines[i].getLine2().getR() << " T: " << fieldLines[i].getLine2().getT() << std::endl;
+		messages::Lines_Line* bLine;
+		bLine = lines->add_line();
+		bLine->set_radius(fieldLines[i].getLine2().getR());
+		bLine->set_angle(fieldLines[i].getLine2().getT());
+		bLine->set_end0(fieldLines[i].getLine2().getEnd0());
+		bLine->set_end1(fieldLines[i].getLine2().getEnd1());
 	}
 
+	if (fieldLines.size() == 0) {
+		for (int i = 0; i < rawLines.size(); i++) {
+			messages::Lines_Line* aLine;
+			aLine = lines->add_line();
+			aLine->set_radius(rawLines[i].getR());
+			aLine->set_angle(rawLines[i].getT());
+			aLine->set_end0(rawLines[i].getEnd0());
+			aLine->set_end1(rawLines[i].getEnd1());
+		}
+	}
+	
 	// avoid errors from empty lines
 	if (rawLines.size() == 0) {
 		messages::Lines_Line* aLine;

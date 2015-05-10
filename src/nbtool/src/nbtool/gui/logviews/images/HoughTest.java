@@ -51,14 +51,18 @@ public class HoughTest extends ViewParent implements CppFuncListener{
         double x0, y0;
         int x1, y1, x2, y2;
         double end0, end1;
-        g.setColor(java.awt.Color.red);
 
         for (int i = 0; i < lines.size(); i++) {
+        	if (i % 2 == 0)
+        		g.setColor(java.awt.Color.red);
+        	else
+        		g.setColor(java.awt.Color.blue);
+
             r = lines.get(i).getRadius();
             t = lines.get(i).getAngle();
             end0 = lines.get(i).getEnd0();
             end1 = lines.get(i).getEnd1();
-            // TODO line protobuff with images
+            
             x0 = r * Math.cos(t) + yImg.getWidth() / 2;
             y0 = -r * Math.sin(t) + yImg.getHeight() / 2;
             x1 = (int)Math.round(x0 + end0 * Math.sin(t));
@@ -69,6 +73,7 @@ public class HoughTest extends ViewParent implements CppFuncListener{
       	} 
 
       	List<VisionFieldOuterClass.BoundaryLines.Line> bLines = fieldLines.getLineList();
+      	g.setColor(java.awt.Color.green);
       	for (int i = 0; i < bLines.size(); i++) {
       		// NOTE image is being drawn 400 to the right on the view
       		// for independent study display purposes

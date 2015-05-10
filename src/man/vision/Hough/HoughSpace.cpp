@@ -106,7 +106,7 @@ void HoughSpace::getPeaks()
 	int dTNeighbors[] = { 0, 1, 1, 1};
 
 	// int threshold = 4 * ACCEPT_THRESHOLD; // smoothing w/ gain 4
-	int threshold = 15 * ACCEPT_THRESHOLD; // NOTE finding that much threshold value works well
+	int threshold = 10 * ACCEPT_THRESHOLD; // NOTE finding that much threshold value works well
 
 	for (int t = 0; t < T_SPAN; t++) {
 		for (int r = 2; r < R_SPAN - 2; r++)
@@ -127,7 +127,6 @@ void HoughSpace::getPeaks()
 									   	 r - R_SPAN / 2 + 0.5,
 									     (t + 0.5) * M_PI / 128.0, 
 									     z >> 2));
-					std::cout << "curr: " << lines.size() << std::endl;
 				}
 			}
 		}
@@ -135,13 +134,13 @@ void HoughSpace::getPeaks()
 }
 
 // removes lines that can't be removed from neighborhood based detection.
-// checks if lines intersect w/ a low angle spread between rx and ry (in the actual source image)
+// checks if lines intersect w/ a low angle spread between rx and ry
 // if they do, throw out the one with the lower accumulator score
 // VERY SLOW (O(n^2)), runs through every pair of lines
 void HoughSpace::suppress(int rx, int ry)
 {
 	// init line marking array
-	bool markForDelete[lines.size()];
+	bool markForDelete[lines.size() - 1];
 	for (unsigned int i = 0; i < lines.size(); i++) {
 		markForDelete[i] = false;
 	}
@@ -162,12 +161,10 @@ void HoughSpace::suppress(int rx, int ry)
 				&& intersects && abs(px) <= rx && abs(py) <= ry) {
 
 				// throw out the one with the lower score
-				double iLineScore = lines[i].getScore();
-				double jLineScore = lines[j].getScore();
 
-				if (iLineScore < jLineScore)
+				if (lines[i].getScore() < lines[j].getScore())
 					markForDelete[i] = true;
-				else if (jLineScore < iLineScore) 
+				else
 					markForDelete[j] = true;
 			}
 		}
@@ -209,25 +206,23 @@ void HoughSpace::findFieldLines()
 
 	// consider every line extremely naively
 	// TODO implement angle bins etc (same issues w/ EdgeList)
-	for (unsigned int i = 0; i < lines.size(); i++) {
+	for (unsigned int i = 0; i < lines.size() - 1; i++) {
 		Line line1 = lines[i];
 
-		for (unsigned int j = 0; j < lines.size(); j++) {
-
+		for (unsigned int j = i + 1; j < lines.size(); j++) {
 			// now consider all opposite gradient lines (which are lines w/ an 
 			// 0x80 offset) within a +0x10 range.
-			if (lines[j].getBinaryAngle() >= (lines[i].getBinaryAngle() + 0x80)
+			if (lines[j].getBinaryAngle() >= (lines[i].getBinaryAngle() + 0x70)
 				&& lines[j].getBinaryAngle() <= (lines[i].getBinaryAngle() + 0x90)) {
 				Line line2 = lines[j];
 
 				// check gradient, where cos(0x10) is about 0.92)
 				// TODO understand this
 				if (line1.getCosT() * line2.getCosT() + line1.getSinT() * line2.getSinT() < -0.92) {
-
 					FieldLine testLine(line1, line2);
 
 					// at this point just ignoring different plans						
-					// TODO implement plans, height, tilt, etc.
+					// TODO implement plans, height, tilt, separation, etc. right now just finds distances in r
 					if (testLine.getSeparation() > 0) {
 						// figure out if the current test pair of lines is better than the pair
 						// at that field line index currently being stored

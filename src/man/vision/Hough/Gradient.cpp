@@ -133,8 +133,6 @@ std::vector<Edge> Gradient::getEdges(int noiseThr, uint8_t* gPixels)
 						}
 					}
 
-					std::cout << octVal << "  " << fieldScore << std::endl;
-
 					if (fieldScore >= ACCEPT_THRESHOLD) {
 						edges.push_back(e);
 						fieldEdgeTrue[x + width * y] = true;
