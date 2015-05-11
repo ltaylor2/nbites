@@ -38,6 +38,8 @@ void FieldBoundaryModule::run_()
 	std::vector<bool> rightPoints(gIn->width() * gIn->height(), false);
 
 
+	// find the left, right, and top points in the green image where those rows/columns
+	// have passed the threshold
 	findFieldEdges(gIn->pixelAddress(0,0),
 				   gIn->width(),
 				   gIn->height(),
@@ -45,6 +47,7 @@ void FieldBoundaryModule::run_()
 				   leftPoints,
 				   rightPoints);
 
+	// mark the edges for display
 	HeapPixelBuffer *newTempBuffer = new HeapPixelBuffer(320 * 240);
 	PackedImage8 fieldEdges(newTempBuffer, 320, 240, 320);
 	for (int y = 0; y < fieldEdges.height(); y++) {
@@ -60,7 +63,7 @@ void FieldBoundaryModule::run_()
 		}
 	}
 
-	// TODO fix ransac constructor rep
+	// run RANSAC on the boundary points and get the line
 	std::vector<BoundaryLine> lines;
 	findBoundaryLines(lines,
 					  gIn->width(),
@@ -69,8 +72,8 @@ void FieldBoundaryModule::run_()
 					  leftPoints,
 					  rightPoints);
 
+	// add and send the field boundary lines message to display the RANSAC lines
 	messages::BoundaryLines* boundaryLines = new messages::BoundaryLines;
-
 	for (int i = 0; i < lines.size(); i++) {
 		messages::BoundaryLines_Line* aLine;
 		aLine = boundaryLines->add_line();
@@ -100,6 +103,8 @@ void FieldBoundaryModule::findFieldEdges(uint8_t* pixels,
 	std::vector<int> yBins(width, 0);
 	std::vector<bool> yEdgeTrue(width, 0);
 
+	// run through the image by row in the inner loop,
+	// keep track of the values in the rows and bins for columns
 	for (int y = 0; y < height; y++) {
 		int lw = 0;
 		int rw = 0;
@@ -107,24 +112,29 @@ void FieldBoundaryModule::findFieldEdges(uint8_t* pixels,
 		bool rightFound = false;
 		for (int x = 0; x < width; x++) {
 
+			// if there's no appropriate edge left
 			if (!yEdgeTrue[x]) {
 				yBins[x] += pixels[x + width * y];
 
+				// mark the point as a boundary if it passes the threshold
 				if(yBins[x] > FIELD_EDGE_THRESHOLD) {
 					top[x + width * y] = true;
 					yEdgeTrue[x] = true;
 				}
 			}
 
+			// if there's no appropriate edge left
 			if (!leftFound) {
 				lw += pixels[x + width * y];
 
+				// mark
 				if (lw >= FIELD_EDGE_THRESHOLD) {
 					left[x + width * y] = true;
 					leftFound = true;
 				}
 			}
 
+			// and same fo rright
 			if (!rightFound) {
 				rw += pixels[(width - x) + width * y];
 				
@@ -137,7 +147,7 @@ void FieldBoundaryModule::findFieldEdges(uint8_t* pixels,
 	}
 }
 
-// TODO find proper error and iteration rates
+// TODO find more rigorous error and iteration rates
 void FieldBoundaryModule::findBoundaryLines(std::vector<BoundaryLine> &lines,
 					   int width,
 					   int height,
@@ -147,20 +157,27 @@ void FieldBoundaryModule::findBoundaryLines(std::vector<BoundaryLine> &lines,
 {
 	std::vector<BoundaryLine> topLines;
 
+
 	Ransac lineFit(width, height, RANSAC_ERROR_THRESH);
 
+	// fit the top lines
+	// NOTE don't populate points because topLines works differently, in case
+	// we want two or more lines later
 	lineFit.bestTopFitLines(RANSAC_ITERATIONS, top, topLines);
 
 	// lineFit.populateNewPoints(top);
 	// BoundaryLine topLine = lineFit.bestFitLine(RANSAC_ITERATIONS);
 
+	// find the left and the right boundary lines from RANSAC on those respective 
+	// sets of points
 	lineFit.populateNewPoints(left);
 	BoundaryLine leftLine = lineFit.bestFitLine(RANSAC_ITERATIONS);
 
 	lineFit.populateNewPoints(right);
 	BoundaryLine rightLine = lineFit.bestFitLine(RANSAC_ITERATIONS);
 
-	// A line to represent the bottom of the image
+	// A line to represent the bottom of the image, where we assume
+	// the field to be
 	Point bot1 = { 0 , height };
 	Point bot2 = { width, height };
 	BoundaryLine botLine = { bot1, bot2, 0 };
@@ -181,6 +198,7 @@ void FieldBoundaryModule::findBoundaryLines(std::vector<BoundaryLine> &lines,
 		lines.push_back(nTop);
 	}
 
+	// if there are two lines, then do the intersections appropriately
 	else if (topLines.size() == 2) {
 		std::cout << "Two top lines!" << std::endl;
 		BoundaryLine topLeft = topLines[0];
@@ -212,6 +230,7 @@ void FieldBoundaryModule::findBoundaryLines(std::vector<BoundaryLine> &lines,
 // thanks, dan
 Point FieldBoundaryModule::getIntersection(BoundaryLine line1, BoundaryLine line2)
 {
+	// calculations to find the point at which a line intersects another line
 	double denom = (line1.p1.x - line1.p2.x) * (line2.p1.y - line2.p2.y)
 					- (line1.p1.y - line1.p2.y) * (line2.p1.x - line2.p2.x);
 

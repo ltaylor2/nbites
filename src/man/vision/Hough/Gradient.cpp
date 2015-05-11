@@ -113,6 +113,7 @@ std::vector<Edge> Gradient::getEdges(int noiseThr, uint8_t* gPixels)
 					// found an edge!
 					edgeTrue[x + width * y] = true;
 					totalEdgeCount++;
+					
 					// now we have to check if it's in the field
 					// do this by checking fetching  pixels directly from the green image
 					// and checking them appropriately based on the direction of the edge
@@ -144,7 +145,7 @@ std::vector<Edge> Gradient::getEdges(int noiseThr, uint8_t* gPixels)
 		}
 
 	}
-	
+
 	std::cout << "Edges (total) found: " << totalEdgeCount << std::endl;
 	return edges;
 }
