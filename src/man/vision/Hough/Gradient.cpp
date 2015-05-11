@@ -97,6 +97,7 @@ std::vector<Edge> Gradient::getEdges(int noiseThr, uint8_t* gPixels)
 		fieldEdgeTrue[i] = false;
 	}
 
+	int totalEdgeCount = 0;
 	noiseThr = noiseThr * noiseThr << 4; // adjusted for mag^2 like stored in gradient
 	for (int y = 2; y < height - 2; y++) {
 		for (int x = 2; x < width - 2; x++) {
@@ -111,7 +112,7 @@ std::vector<Edge> Gradient::getEdges(int noiseThr, uint8_t* gPixels)
 					
 					// found an edge!
 					edgeTrue[x + width * y] = true;
-
+					totalEdgeCount++;
 					// now we have to check if it's in the field
 					// do this by checking fetching  pixels directly from the green image
 					// and checking them appropriately based on the direction of the edge
@@ -129,7 +130,8 @@ std::vector<Edge> Gradient::getEdges(int noiseThr, uint8_t* gPixels)
 					int y = height / 2 - e.getY();
 					for (int r = -1; r < 2; r++) {
 						for (int c = -1; c < 2; c++) {
-							fieldScore += octants[octVal][(r + 1) + 3 * (c + 1)] * gPixels[(x + r) + width * (y + c)];
+							if (r != 0 || c != 0)
+								fieldScore += octants[octVal][(r + 1) + 3 * (c + 1)] * gPixels[(x + r) + width * (y + c)];
 						}
 					}
 
@@ -142,7 +144,8 @@ std::vector<Edge> Gradient::getEdges(int noiseThr, uint8_t* gPixels)
 		}
 
 	}
-
+	
+	std::cout << "Edges (total) found: " << totalEdgeCount << std::endl;
 	return edges;
 }
 

@@ -110,8 +110,7 @@ void HoughLineModule::run_() {
     	}
     }
 
-	std::cout << "Got Edges" << std::endl;
-	std::cout << "Edges found: " << edges.size() << std::endl;
+	std::cout << "Edges (in good field orientation) found: " << edges.size() << std::endl;
 	
 	// run the houghspace with the edges from the gradient,
 	// getting lines

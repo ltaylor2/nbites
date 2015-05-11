@@ -29,6 +29,7 @@ public class HoughTest extends ViewParent implements CppFuncListener{
 
 
 	public void paintComponent(Graphics g) {
+        // paint output images from log
         if (yImg != null) {
 		    g.drawImage(yImg, 0, 0, null);
         }
@@ -45,6 +46,7 @@ public class HoughTest extends ViewParent implements CppFuncListener{
 			g.drawImage(fImg, 400, 280, null);
 		}
 
+        // Print the lines on the hough image
         List<VisionFieldOuterClass.Lines.Line> lines = houghLines.getLineList();
         float r;
         float t;
@@ -72,6 +74,7 @@ public class HoughTest extends ViewParent implements CppFuncListener{
             g.drawLine(x1, y1, x2, y2);
       	} 
 
+        // Print field boundary lines in green on the green image
       	List<VisionFieldOuterClass.BoundaryLines.Line> bLines = fieldLines.getLineList();
       	g.setColor(java.awt.Color.green);
       	for (int i = 0; i < bLines.size(); i++) {
